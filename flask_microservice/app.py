@@ -9,60 +9,28 @@ import time
 from observer_rooms import dashboard, ConcreteObserver
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
+import logging
+logging.basicConfig(filename='logs/debug.log', encoding='utf-8', level=logging.DEBUG)
+logging.debug('This message should go to the log file')
+logging.info('So should this')
+logging.warning('And this, too')
+logging.error('And non-ASCII stuff, too, like Øresund and Malmö')
 
-Payload.max_decode_packets = 50
 
-thread = None
-thread_lock = Lock()
+Payload.max_decode_packets = 16
 
 secret = config()
 app = Flask(__name__, template_folder='static/templates', static_folder='static')
 app.config['SECRET_KEY'] = secret
 
 async_mode = None
-socketio = SocketIO(app, async_mode=async_mode)
+socketio = SocketIO(app, async_mode=async_mode, cors_allowed_origins='*')
 
 dashboard_prices = dashboard(socketio=socketio)
 
-# def background_thread():
-#     """Example of how to send server generated events to clients."""
-#     count = 0
-#     while True:
-#         socketio.sleep(10)
-#         count += 1
-#         socketio.emit('my_response',
-#                       {'data': 'Server generated event', 'count': count})
-
-
 @app.route('/')
 def index():
-    
-    return render_template('index2.html', async_mode=socketio.async_mode)
-
-
-
-
-@socketio.event
-def join(message):
-    join_room(message['room'])
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': 'In rooms: ' + ', '.join(rooms()),
-          'count': session['receive_count']})
-
-
-@socketio.event
-def leave(message):
-    leave_room(message['room'])
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': 'In rooms: ' + ', '.join(rooms()),
-          'count': session['receive_count']})
-
-
-
-
-
+    return render_template('index2.html', async_mode=socketio.async_mode), 200
 
 
 @socketio.event
@@ -80,98 +48,33 @@ def disconnect_request():
          callback=can_disconnect)
 
 
-
-
-
-
-
-# @socketio.event
-# def connect():
-#     global thread
-#     with thread_lock:
-#         if thread is None:
-#             thread = socketio.start_background_task(background_thread)
-#     emit('my_response', {'data': 'Connected', 'count': 0}, broadcast=True)
-
 @socketio.on('connect')
 def handleConnect():
-    print('New user connected')
-    # observer_a = ConcreteObserver()
     new_observer = ConcreteObserver(request.sid)
     dashboard_prices.attach(new_observer)
-
-    # print('Someone connected')
-    emit('message', 'A user has joined', broadcast=True)
 
 
 
 @socketio.on('disconnect')
-def test_disconnect():
-    print('Client disconnected', request.sid)
-
-
+def disconnect_():
+    with app.app_context():
+        dashboard_prices.detach(request.sid)
+        print('Client disconnected', request.sid)
 
 
 @socketio.on_error()
 def chat_error_handler(e):
-    print('An error has occurred: ' + str(e))
-
-
-
-@socketio.on('join')
-def on_join(data):
-    username = data['username']
-    room = data['room']
-    join_room(room)
-    emit(username + ' has entered the room.', to=room)
-
-@socketio.on('leave')
-def on_leave(data):
-    username = data['username']
-    room = data['room']
-    leave_room(room)
-    emit(username + ' has left the room.', to=room)
-
-
-
-@socketio.on('join_dashroom')
-def on_join(data):
-    sid = request.sid
-    room = 'dashboard'
-    join_room(room)
-    print(f'{sid} joined room {room}')
-    emit('message', {'count': 'asd', 'data': f'{sid} has entered the room.'}, to='/room')
-
-
-
+    print('chat_error_handler\n\n\nchat_error_handler: An error has occurred: ' + str(e))
 
 
 def price_change():
     price = float(round(random.uniform(0.01, 99.99), 2))
-    # import sys
-    # print(dashboard_prices.observers)
-    # sys.exit()
-    if len(dashboard_prices.observers) != 0:
+    if len(dashboard_prices.observers) > 0:
         with app.app_context():
-            # print('broadcasting')
-            emit('message', {'count': price, 'data': 'message sent'}, broadcast=True, namespace='/dashboard')
-            
+            emit('message', {'count': price, 'data': 'message sent'}, broadcast=True, namespace='')
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-if __name__ == '__main__':
+def backround_task_manager():
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=price_change, trigger="interval", seconds=1)
     scheduler.start()
@@ -179,4 +82,7 @@ if __name__ == '__main__':
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: scheduler.shutdown())
 
+
+if __name__ == '__main__':
+    backround_task_manager()
     socketio.run(app, port=8000)

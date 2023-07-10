@@ -1,0 +1,248 @@
+DEBUG:root:This message should go to the log file
+INFO:root:So should this
+WARNING:root:And this, too
+ERROR:root:And non-ASCII stuff, too, like Øresund and Malmö
+DEBUG:tzlocal:Looking up time zone info from registry
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "price_change" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 17:43:56.405818+03:00 (in 1.000000 seconds)
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:43:56 EEST)" (scheduled at 2023-07-09 17:43:56.405818+03:00)
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 17:43:57.405818+03:00 (in 0.996431 seconds)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:43:57 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 17:43:58.405818+03:00 (in 0.978173 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:43:58 EEST)" (scheduled at 2023-07-09 17:43:57.405818+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:43:58 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 17:43:59.405818+03:00 (in 0.988240 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:43:59 EEST)" (scheduled at 2023-07-09 17:43:58.405818+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:43:59 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 17:43:59] "GET /socket.io/?EIO=4&transport=polling&t=Oax70Fk HTTP/1.1" 200 254 0.000000
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+DEBUG:geventwebsocket.handler:Can only upgrade connection if using GET method.
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 17:43:59] "POST /socket.io/?EIO=4&transport=polling&t=Oax70Fs&sid=5DAquqEztWXFACFpAAAA HTTP/1.1" 200 195 0.000000
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 17:43:59] "GET /socket.io/?EIO=4&transport=polling&t=Oax70Ft&sid=5DAquqEztWXFACFpAAAA HTTP/1.1" 200 189 0.000000
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+DEBUG:geventwebsocket.handler:Attempting to upgrade connection
+DEBUG:geventwebsocket.handler:WebSocket request accepted, switching protocols
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+DEBUG:geventwebsocket.handler:Can only upgrade connection if using GET method.
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 17:43:59] "POST /socket.io/?EIO=4&transport=polling&t=Oax70Fz&sid=5DAquqEztWXFACFpAAAA HTTP/1.1" 200 195 0.000000
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 17:43:59] "GET /socket.io/?EIO=4&transport=polling&t=Oax70Fz.0&sid=5DAquqEztWXFACFpAAAA HTTP/1.1" 200 157 0.000000
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 17:44:00.405818+03:00 (in 0.994171 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:44:00 EEST)" (scheduled at 2023-07-09 17:43:59.405818+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:44:00 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 17:44:01.405818+03:00 (in 0.986346 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:44:01 EEST)" (scheduled at 2023-07-09 17:44:00.405818+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:44:01 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 17:44:02.405818+03:00 (in 0.984303 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:44:02 EEST)" (scheduled at 2023-07-09 17:44:01.405818+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:44:02 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 17:44:03.405818+03:00 (in 0.997199 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:44:03 EEST)" (scheduled at 2023-07-09 17:44:02.405818+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 17:44:03 EEST)" executed successfully
+INFO:apscheduler.scheduler:Scheduler has been shut down
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+DEBUG:root:This message should go to the log file
+INFO:root:So should this
+WARNING:root:And this, too
+ERROR:root:And non-ASCII stuff, too, like Øresund and Malmö
+DEBUG:tzlocal:Looking up time zone info from registry
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "price_change" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:50:50.661710+03:00 (in 0.997996 seconds)
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:50 EEST)" (scheduled at 2023-07-09 21:50:50.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:50 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:50:51.661710+03:00 (in 0.987425 seconds)
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:50:52.661710+03:00 (in 0.989159 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:52 EEST)" (scheduled at 2023-07-09 21:50:51.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:52 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:50:53.661710+03:00 (in 0.991420 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:53 EEST)" (scheduled at 2023-07-09 21:50:52.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:53 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:50:54.661710+03:00 (in 0.997294 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:54 EEST)" (scheduled at 2023-07-09 21:50:53.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:54 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:50:55.661710+03:00 (in 0.997892 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:55 EEST)" (scheduled at 2023-07-09 21:50:54.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:55 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:50:56.661710+03:00 (in 0.998740 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:56 EEST)" (scheduled at 2023-07-09 21:50:55.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:56 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:50:57.661710+03:00 (in 0.994258 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:57 EEST)" (scheduled at 2023-07-09 21:50:56.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:57 EEST)" executed successfully
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:50:58.661710+03:00 (in 0.983794 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:58 EEST)" (scheduled at 2023-07-09 21:50:57.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:58 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+ERROR:engineio.server:The client is using an unsupported version of the Socket.IO or Engine.IO protocols (further occurrences of this error will be logged with level INFO)
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:50:57] "GET /socket.io/?EIO=3&transport=polling&t=1688928655716-0 HTTP/1.1" 400 195 0.001999
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:50:59.661710+03:00 (in 0.985841 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:59 EEST)" (scheduled at 2023-07-09 21:50:58.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:50:59 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:50:58] "GET /socket.io/?EIO=3&transport=polling&t=1688928658763-0 HTTP/1.1" 400 195 0.001054
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:00.661710+03:00 (in 0.985494 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:00 EEST)" (scheduled at 2023-07-09 21:50:59.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:00 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:50:59] "GET /socket.io/?EIO=3&transport=polling&t=1688928659770-0 HTTP/1.1" 400 195 0.001989
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:01.661710+03:00 (in 0.986564 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:01 EEST)" (scheduled at 2023-07-09 21:51:00.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:01 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:00] "GET /socket.io/?EIO=3&transport=polling&t=1688928660779-0 HTTP/1.1" 400 195 0.000000
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:02.661710+03:00 (in 0.990421 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:02 EEST)" (scheduled at 2023-07-09 21:51:01.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:02 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:01] "GET /socket.io/?EIO=3&transport=polling&t=1688928661784-0 HTTP/1.1" 400 195 0.000995
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:03.661710+03:00 (in 0.995583 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:03 EEST)" (scheduled at 2023-07-09 21:51:02.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:03 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:02] "GET /socket.io/?EIO=3&transport=polling&t=1688928662791-0 HTTP/1.1" 400 195 0.001515
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:04.661710+03:00 (in 0.985130 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:04 EEST)" (scheduled at 2023-07-09 21:51:03.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:04 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:03] "GET /socket.io/?EIO=3&transport=polling&t=1688928663799-0 HTTP/1.1" 400 195 0.001033
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:05.661710+03:00 (in 0.984522 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:05 EEST)" (scheduled at 2023-07-09 21:51:04.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:05 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:04] "GET /socket.io/?EIO=3&transport=polling&t=1688928664803-0 HTTP/1.1" 400 195 0.001046
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:06.661710+03:00 (in 0.984959 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:06 EEST)" (scheduled at 2023-07-09 21:51:05.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:06 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:05] "GET /socket.io/?EIO=3&transport=polling&t=1688928665811-0 HTTP/1.1" 400 195 0.001085
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:07.661710+03:00 (in 0.984708 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:07 EEST)" (scheduled at 2023-07-09 21:51:06.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:07 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:06] "GET /socket.io/?EIO=3&transport=polling&t=1688928666818-0 HTTP/1.1" 400 195 0.001001
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:08.661710+03:00 (in 0.985863 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:08 EEST)" (scheduled at 2023-07-09 21:51:07.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:08 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:07] "GET /socket.io/?EIO=3&transport=polling&t=1688928667825-0 HTTP/1.1" 400 195 0.000993
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:09.661710+03:00 (in 0.990902 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:09 EEST)" (scheduled at 2023-07-09 21:51:08.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:09 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:08] "GET /socket.io/?EIO=3&transport=polling&t=1688928668832-0 HTTP/1.1" 400 195 0.001405
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:10.661710+03:00 (in 0.992911 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:10 EEST)" (scheduled at 2023-07-09 21:51:09.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:10 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:09] "GET /socket.io/?EIO=3&transport=polling&t=1688928669838-0 HTTP/1.1" 400 195 0.001001
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:11.661710+03:00 (in 0.997327 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:11 EEST)" (scheduled at 2023-07-09 21:51:10.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:11 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:10] "GET /socket.io/?EIO=3&transport=polling&t=1688928670842-0 HTTP/1.1" 400 195 0.000000
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:12.661710+03:00 (in 0.984655 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:12 EEST)" (scheduled at 2023-07-09 21:51:11.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:12 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:11] "GET /socket.io/?EIO=3&transport=polling&t=1688928671844-0 HTTP/1.1" 400 195 0.000000
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:13.661710+03:00 (in 0.987471 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:13 EEST)" (scheduled at 2023-07-09 21:51:12.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:13 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:12] "GET /socket.io/?EIO=3&transport=polling&t=1688928672849-0 HTTP/1.1" 400 195 0.000999
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:14.661710+03:00 (in 0.987547 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:14 EEST)" (scheduled at 2023-07-09 21:51:13.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:14 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:13] "GET /socket.io/?EIO=3&transport=polling&t=1688928673852-0 HTTP/1.1" 400 195 0.001330
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:15.661710+03:00 (in 0.990046 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:15 EEST)" (scheduled at 2023-07-09 21:51:14.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:15 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:14] "GET /socket.io/?EIO=3&transport=polling&t=1688928674859-0 HTTP/1.1" 400 195 0.001022
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:16.661710+03:00 (in 0.991974 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:16 EEST)" (scheduled at 2023-07-09 21:51:15.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:16 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:15] "GET /socket.io/?EIO=3&transport=polling&t=1688928675866-0 HTTP/1.1" 400 195 0.001012
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:17.661710+03:00 (in 0.996225 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:17 EEST)" (scheduled at 2023-07-09 21:51:16.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:17 EEST)" executed successfully
+DEBUG:geventwebsocket.handler:Initializing WebSocket
+DEBUG:geventwebsocket.handler:Validating WebSocket request
+INFO:geventwebsocket.handler:127.0.0.1 - - [2023-07-09 21:51:16] "GET /socket.io/?EIO=3&transport=polling&t=1688928676873-0 HTTP/1.1" 400 195 0.000000
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:Next wakeup is due at 2023-07-09 21:51:18.661710+03:00 (in 0.995380 seconds)
+INFO:apscheduler.executors.default:Running job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:18 EEST)" (scheduled at 2023-07-09 21:51:17.661710+03:00)
+INFO:apscheduler.executors.default:Job "price_change (trigger: interval[0:00:01], next run at: 2023-07-09 21:51:18 EEST)" executed successfully
+INFO:apscheduler.scheduler:Scheduler has been shut down
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added

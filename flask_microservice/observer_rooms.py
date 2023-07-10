@@ -6,14 +6,15 @@ from interfaces import ISubject, IObserver
 class dashboard(ISubject):
     def __init__(self, socketio) -> None:
         self.socket = socketio
-        self.observers = []
+        self.observers = {}
 
     def attach(self, observer: IObserver) -> None:
         print("Subject: Attached an observer.")
-        self.observers.append(observer)
+        self.observers[observer.sid] = observer
+        # self.observers.append(observer)
 
-    def detach(self, observer: IObserver) -> None:
-        self.observers.remove(observer)
+    def detach(self, sid) -> None:
+        self.observers.pop(sid)
 
     def notify(self) -> None:
         print("Subject: Notifying observers...")
