@@ -1,41 +1,37 @@
 from interfaces import ISubject, IObserver
-# from flask_socketio import SocketIO, emit
-# import random
 
 
-class dashboard(ISubject):
+class Publisher(ISubject):
     def __init__(self, socketio) -> None:
         self.socket = socketio
-        self.observers = {}
+        self._observers = {}
 
     def attach(self, observer: IObserver) -> None:
         print("Subject: Attached an observer.")
-        self.observers[observer.sid] = observer
-        # self.observers.append(observer)
+        self._observers[observer.sid] = observer
 
-    def detach(self, sid) -> None:
-        self.observers.pop(sid)
+    def detach(self, sid: str) -> None:
+        self._observers.pop(sid)
 
     def notify(self) -> None:
         print("Subject: Notifying observers...")
-        for observer in self.observers:
-            self.socket.emit('my_response',{'data': message['data'], 'count': session['receive_count']}, to=message['room'], broadcast=True)
+        for observer in self._observers:
             observer.update(self)
     
-    def _some_business_logic(self, price) -> None:
-        print("\nSubject: I'm doing something important.")
-        self._state = price
+    def emit_price(self, price: float) -> None:
+        print("Price updated")
+        self.price = price
 
-        print(f"Subject: My state has just changed to: {self._state}")
-        self.notify()
+        print(f"Subject: Price just changed to: {self.price}")
+        self.notify()    
     
-    
-
 
 class ConcreteObserver(IObserver):
-    def __init__(self, sid) -> None:
+    def __init__(self, sid: str, room: str):
         self.sid = sid
 
     def update(self, subject: IObserver) -> None:
-        if subject._state < 3:
-            print("ConcreteObserver: Reacted to the event")
+        # self.socket.emit('my_response',{'price': self.price}, namespace=self.room, broadcast=True)
+        print("ConcreteObserver: Reacted to the event")
+
+

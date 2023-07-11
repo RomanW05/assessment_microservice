@@ -44,3 +44,5 @@ class IObserver(ABC):
         Receive update from subject.
         """
         pass
+
+

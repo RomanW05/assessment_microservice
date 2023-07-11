@@ -4,7 +4,6 @@ flask-socketio==5.2.0
 mock==5.0.2
 python_engineio==4.5.1
 websockets==10.4
-uvicorn
 simple-websocket
 flask-socketio==5.2.0
 gevent

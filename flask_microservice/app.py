@@ -1,124 +1,99 @@
-from threading import Lock
 from flask import Flask, render_template, session, copy_current_request_context, request
-from flask_socketio import SocketIO, emit, send, join_room, leave_room, close_room, rooms, disconnect
+from flask_socketio import SocketIO, Namespace, emit, send, join_room, leave_room, close_room, rooms, disconnect
 import random
 from config import config
 import json
 from engineio.payload import Payload
-import time
-from observer_rooms import dashboard, ConcreteObserver
+from observer_rooms import Publisher, ConcreteObserver
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 import logging
-from gevent import monkey
-monkey.patch_all()
-
 from asgiref.wsgi import WsgiToAsgi
-# logging.basicConfig(filename='logs/debug.log', encoding='utf-8', level=logging.DEBUG)
-# logging.debug('This message should go to the log file')
-# logging.info('So should this')
-# logging.warning('And this, too')
-# logging.error('And non-ASCII stuff, too, like Øresund and Malmö')
-# root_logger= logging.getLogger()
-# root_logger.setLevel(logging.DEBUG) # or whatever
+
+
+# Setup logs
+# logger= logging.getLogger()
+# logger.setLevel(logging.DEBUG) # or whatever
 # handler = logging.FileHandler('logs/debug.log', 'a', 'utf-8') # or whatever
 # handler.setFormatter(logging.Formatter('%(name)s %(message)s')) # or whatever
-# root_logger.addHandler(handler)
+# logger.addHandler(handler)
 
-
-Payload.max_decode_packets = 16
-
+# Configure app
 secret = config()
 app = Flask(__name__, template_folder='static/templates', static_folder='static')
 app.config['SECRET_KEY'] = secret
 app.use_reloader=False
-
-
-# sio = SocketIO.AsyncServer()
-# app = engineio.ASGIApp(sio, static_files={
-#             '/': 'index.html',
-#             '/static': './public',
-#         })
-
-
 async_mode = None
 socketio = SocketIO(app, async_mode=async_mode, cors_allowed_origins='*')
+Payload.max_decode_packets = 16
 
-dashboard_prices = dashboard(socketio=socketio)
+# Setup logs
+if app.debug is not True:   
+    import logging
+    from logging.handlers import TimedRotatingFileHandler
+    logname = "logs/websocket.log"
+    file_handler = TimedRotatingFileHandler(logname, when="midnight", backupCount=30, utc=True)
+    file_handler.suffix = "%Y%m%d"
+    file_handler.setLevel(logging.ERROR)
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    file_handler.setFormatter(formatter)
+    app.logger.addHandler(file_handler)
 
-@app.route('/')
-def index():
-    return render_template('index2.html', async_mode=socketio.async_mode), 200
+# Load interfaces
+websocket_clients = Publisher(socketio=socketio)
 
+# Define Class-based Namespaces
+class MyNamespace(Namespace):
+    def on_connect(self):
+        new_observer = ConcreteObserver(request.sid, self.namespace)
+        websocket_clients.attach(new_observer)
+        print(f'Client connected to {self.namespace}')
 
-@socketio.event
-def disconnect_request():
-    @copy_current_request_context
-    def can_disconnect():
-        disconnect()
+    def on_disconnect(self):
+        with app.app_context():
+            websocket_clients.detach(request.sid)
+            print(f'Client {request.sid} disconnected')
 
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    # for this emit we use a callback function
-    # when the callback function is invoked we know that the message has been
-    # received and it is safe to disconnect
-    emit('my_response',
-         {'data': 'Disconnected!', 'count': session['receive_count']},
-         callback=can_disconnect)
-
-
-@socketio.on('connect')
-def handleConnect():
-    new_observer = ConcreteObserver(request.sid)
-    dashboard_prices.attach(new_observer)
-
-
-
-@socketio.on('disconnect')
-def disconnect_():
-    with app.app_context():
-        dashboard_prices.detach(request.sid)
-        print('Client disconnected', request.sid)
+    def on_event(self):
+        websocket_clients.notify()
 
 
-@socketio.on_error()
-def chat_error_handler(e):
-    print('chat_error_handler\n\n\nchat_error_handler: An error has occurred: ' + str(e))
+# Namespaces instantiation
+socketio.on_namespace(MyNamespace('/dashboard'))
+
+
+@socketio.on_error_default
+def error_handler(e):
+    print(f'chat_error_handler. An error has occurred: {e}')
+    app.logger.error(e)
 
 
 def price_change():
     price = float(round(random.uniform(0.01, 99.99), 2))
-    if len(dashboard_prices.observers) > 0:
-        with app.app_context():
-            emit('message', {'count': price, 'data': 'message sent'}, broadcast=True, namespace='')
+    # if len(websocket_clients.observers) > 0:
+    with app.app_context():
+        room = "/dashboard"
+        emit('message', {'count': price, 'data': 'message sent'}, broadcast=True, namespace=room)
+
+
+def price_alert(price, room):
+    with app.app_context():
+        emit('message', {'price': price}, broadcast=True, namespace=room)
 
 
 def backround_task_manager():
+    print('background task manager started')
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=price_change, trigger="interval", seconds=1)
     scheduler.start()
-
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: scheduler.shutdown())
 
-
-
-
-backround_task_manager()
-
-
 def create_app():
-   return WsgiToAsgi(socketio.run(app, host='0.0.0.0', port=8000))
+   backround_task_manager()
+   return WsgiToAsgi(socketio.run(
+       app, host='0.0.0.0', port=8000
+       ))
 
 
-# if __name__ == "__main__":
-#     create_app()
-# wsgi = WsgiToAsgi(socketio.run(app, host='0.0.0.0', port=8000))
-    
-    # waitress.serve(
-    #     socketio.run(app, host='0.0.0.0', port=8000)
-    # )
-    
-# if __name__ == "__main__":
-# from waitress import serve
-# socket_app = socketio.run(app, host='0.0.0.0', port=8000)
-# serve(socket_app)
+
