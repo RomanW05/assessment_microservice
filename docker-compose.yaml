@@ -3,12 +3,8 @@ services:
     flask_microservice:
         build:
             dockerfile: ./flask_microservice/Dockerfile
-        # environment:
-        #     FLASK_DEBUG: 1
-        #     FLASK_ENV: development
-            # FLASK_APP: ./flask_microservice/app.py
         ports:
             - "8000:8000"
 
-        # command: waitress-serve --call "app:create_app"
+
 
