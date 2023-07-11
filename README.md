@@ -18,19 +18,22 @@
 
 # Django structure:
   1. Apps:
-    ## Dashboard
-    ## Security: Login, registration, 2FA
-  . API:
+    - Dashboard
+    - Security: Login, registration, 2FA
+  2. API:
     1. Login
     2. Registration
     3. 2FA
     4. Dashboard
-  . Validator
-  . ORM schema:
+  3. Validator
+  4. ORM schema:
     1. Username
     2. Password
     3. Email
     4. Google auth
 
-  . Error handler
-  . Unit test
+  5. Error handler
+  6. Unit test
+
+# Overall Structure
+  1. Docker-compose to build all microservices
