@@ -1,6 +1,6 @@
 from threading import Lock
 from flask import Flask, render_template, session, copy_current_request_context, request
-from flask_socketio import SocketIO, emit, join_room, leave_room, close_room, rooms, disconnect
+from flask_socketio import SocketIO, emit, send, join_room, leave_room, close_room, rooms, disconnect
 import random
 from config import config
 import json
@@ -10,11 +10,20 @@ from observer_rooms import dashboard, ConcreteObserver
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 import logging
-logging.basicConfig(filename='logs/debug.log', encoding='utf-8', level=logging.DEBUG)
-logging.debug('This message should go to the log file')
-logging.info('So should this')
-logging.warning('And this, too')
-logging.error('And non-ASCII stuff, too, like Øresund and Malmö')
+from gevent import monkey
+monkey.patch_all()
+
+from asgiref.wsgi import WsgiToAsgi
+# logging.basicConfig(filename='logs/debug.log', encoding='utf-8', level=logging.DEBUG)
+# logging.debug('This message should go to the log file')
+# logging.info('So should this')
+# logging.warning('And this, too')
+# logging.error('And non-ASCII stuff, too, like Øresund and Malmö')
+# root_logger= logging.getLogger()
+# root_logger.setLevel(logging.DEBUG) # or whatever
+# handler = logging.FileHandler('logs/debug.log', 'a', 'utf-8') # or whatever
+# handler.setFormatter(logging.Formatter('%(name)s %(message)s')) # or whatever
+# root_logger.addHandler(handler)
 
 
 Payload.max_decode_packets = 16
@@ -22,6 +31,15 @@ Payload.max_decode_packets = 16
 secret = config()
 app = Flask(__name__, template_folder='static/templates', static_folder='static')
 app.config['SECRET_KEY'] = secret
+app.use_reloader=False
+
+
+# sio = SocketIO.AsyncServer()
+# app = engineio.ASGIApp(sio, static_files={
+#             '/': 'index.html',
+#             '/static': './public',
+#         })
+
 
 async_mode = None
 socketio = SocketIO(app, async_mode=async_mode, cors_allowed_origins='*')
@@ -83,6 +101,24 @@ def backround_task_manager():
     atexit.register(lambda: scheduler.shutdown())
 
 
-if __name__ == '__main__':
-    backround_task_manager()
-    socketio.run(app, port=8000)
+
+
+backround_task_manager()
+
+
+def create_app():
+   return WsgiToAsgi(socketio.run(app, host='0.0.0.0', port=8000))
+
+
+# if __name__ == "__main__":
+#     create_app()
+# wsgi = WsgiToAsgi(socketio.run(app, host='0.0.0.0', port=8000))
+    
+    # waitress.serve(
+    #     socketio.run(app, host='0.0.0.0', port=8000)
+    # )
+    
+# if __name__ == "__main__":
+# from waitress import serve
+# socket_app = socketio.run(app, host='0.0.0.0', port=8000)
+# serve(socket_app)
