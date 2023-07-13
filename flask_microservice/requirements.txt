@@ -9,3 +9,4 @@ flask-socketio==5.2.0
 gevent
 gevent-websocket
 asgiref
+gunicorn

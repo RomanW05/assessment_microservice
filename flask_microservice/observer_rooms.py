@@ -7,11 +7,12 @@ class Publisher(ISubject):
         self._observers = {}
 
     def attach(self, observer: IObserver) -> None:
-        print("Subject: Attached an observer.")
         self._observers[observer.sid] = observer
+        print(f'Subject: Attached observer {observer}')
 
     def detach(self, sid: str) -> None:
-        self._observers.pop(sid)
+        del self._observers[sid]
+        print(f'Observer {sid} detached')
 
     def notify(self) -> None:
         print("Subject: Notifying observers...")
@@ -29,9 +30,9 @@ class Publisher(ISubject):
 class ConcreteObserver(IObserver):
     def __init__(self, sid: str, room: str):
         self.sid = sid
+        self.room = room
 
-    def update(self, subject: IObserver) -> None:
+    def update(self) -> None:
         # self.socket.emit('my_response',{'price': self.price}, namespace=self.room, broadcast=True)
         print("ConcreteObserver: Reacted to the event")
-
 

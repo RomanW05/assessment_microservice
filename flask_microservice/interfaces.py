@@ -46,3 +46,19 @@ class IObserver(ABC):
         pass
 
 
+class IMyNamespace(ABC):
+    @abstractmethod
+    def __init__(self) -> None:
+        pass
+
+    @abstractmethod
+    def on_connect(self):
+        pass
+
+    @abstractmethod
+    def on_disconnect(self):
+        pass
+
+    @abstractmethod
+    def on_event(self):
+        pass

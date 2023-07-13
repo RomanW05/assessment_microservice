@@ -37,3 +37,6 @@
 
 # Overall Structure
   1. Docker-compose to build all microservices
+
+Notes:
+Some tests are from https://github.com/miguelgrinberg/Flask-SocketIO/blob/main/test_socketio.py

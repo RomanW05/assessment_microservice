@@ -21,7 +21,7 @@
 
             // Event handler for server sent data.
             socket.on('message', function(msg, cb) {
-                $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
+                $('#log').append('<br>' + $('<div/>').text('Received #' + msg.price).html());
                 if (cb)
                     cb();
             });

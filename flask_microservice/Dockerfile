@@ -11,3 +11,5 @@ COPY /flask_microservice /app
 ENTRYPOINT [ "python" ]
 
 CMD [ "wsgi.py" ]
+# CMD [ "gunicorn", "-k", "gevent", "-w", "1", "app:app" ]
+# CMD ["gunicorn", "-k", "geventwebsocket.gunicorn.workers.GeventWebSocketWorker", "-w", "1", "app:app"]

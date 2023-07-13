@@ -1,0 +1,122 @@
+2023-07-13 10:33:37,193 - app - ERROR - MyNamespace.on_error_default() missing 1 required positional argument: 'e'
+2023-07-13 10:34:19,976 - app - ERROR - MyNamespace.on_error_default() missing 1 required positional argument: 'e'
+2023-07-13 10:35:00,351 - app - ERROR - MyNamespace.on_error_default() missing 1 required positional argument: 'e'
+2023-07-13 10:35:22,191 - app - ERROR - MyNamespace.on_error_default() missing 1 required positional argument: 'a'
+2023-07-13 10:35:43,488 - app - ERROR - MyNamespace.on_error_default() missing 1 required positional argument: 'e'
+2023-07-13 10:35:55,596 - app - ERROR - MyNamespace.on_error_default() missing 1 required positional argument: 'e'
+2023-07-13 10:37:29,180 - app - ERROR - send error
+2023-07-13 10:37:50,097 - app - ERROR - send error
+2023-07-13 10:49:02,202 - app - ERROR - send error
+2023-07-13 10:49:24,872 - app - ERROR - send error
+2023-07-13 10:49:40,950 - app - ERROR - send error
+2023-07-13 10:49:57,748 - app - ERROR - send error
+2023-07-13 10:50:36,231 - app - ERROR - send error
+2023-07-13 10:51:20,266 - app - ERROR - send error
+2023-07-13 10:52:15,636 - app - ERROR - send error
+2023-07-13 10:52:34,420 - app - ERROR - send error
+2023-07-13 10:55:06,893 - app - ERROR - send error
+2023-07-13 10:55:17,324 - app - ERROR - send error
+2023-07-13 10:55:27,823 - app - ERROR - send error
+2023-07-13 10:55:43,697 - app - ERROR - send error
+2023-07-13 10:56:17,951 - app - ERROR - send error
+2023-07-13 13:13:20,717 - app - ERROR - send error
+2023-07-13 13:15:06,285 - app - ERROR - send error
+2023-07-13 13:16:50,953 - app - ERROR - send error
+2023-07-13 13:16:59,977 - app - ERROR - send error
+2023-07-13 13:17:16,275 - app - ERROR - send error
+2023-07-13 13:17:53,950 - app - ERROR - send error
+2023-07-13 13:20:54,090 - app - ERROR - send error
+2023-07-13 16:17:30,614 - app - ERROR - name 'request' is not defined
+2023-07-13 16:17:43,245 - app - ERROR - name 'app' is not defined
+2023-07-13 16:17:43,303 - app - ERROR - name 'request' is not defined
+2023-07-13 16:23:43,676 - app - ERROR - name 'request' is not defined
+2023-07-13 16:23:43,683 - app - ERROR - name 'request' is not defined
+2023-07-13 16:23:43,688 - app - ERROR - name 'request' is not defined
+2023-07-13 16:23:43,693 - app - ERROR - name 'request' is not defined
+2023-07-13 16:23:43,694 - app - ERROR - name 'app' is not defined
+2023-07-13 16:23:43,695 - app - ERROR - name 'request' is not defined
+2023-07-13 16:23:43,696 - app - ERROR - name 'app' is not defined
+2023-07-13 16:23:43,697 - app - ERROR - name 'request' is not defined
+2023-07-13 16:23:43,697 - app - ERROR - name 'app' is not defined
+2023-07-13 16:23:43,705 - app - ERROR - name 'request' is not defined
+2023-07-13 16:23:43,726 - app - ERROR - name 'request' is not defined
+2023-07-13 16:23:43,731 - app - ERROR - name 'request' is not defined
+2023-07-13 16:23:43,731 - app - ERROR - name 'request' is not defined
+2023-07-13 16:23:43,731 - app - ERROR - name 'app' is not defined
+2023-07-13 16:23:43,731 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:04,479 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:04,484 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:04,489 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:04,495 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:04,495 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:04,497 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:04,497 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:04,499 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:04,499 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:04,506 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:04,528 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:04,533 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:04,534 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:04,534 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:04,534 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:13,123 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:13,128 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:13,133 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:13,138 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:13,138 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:13,140 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:13,141 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:13,142 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:13,143 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:13,150 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:13,171 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:13,176 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:13,177 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:13,177 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:13,177 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:30,849 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:30,855 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:30,861 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:30,865 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:30,865 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:30,867 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:30,867 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:30,869 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:30,869 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:30,875 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:30,899 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:30,904 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:30,905 - app - ERROR - name 'request' is not defined
+2023-07-13 16:24:30,905 - app - ERROR - name 'app' is not defined
+2023-07-13 16:24:30,905 - app - ERROR - name 'app' is not defined
+2023-07-13 16:38:07,582 - app - ERROR - name 'request' is not defined
+2023-07-13 16:38:07,715 - app - ERROR - name 'request' is not defined
+2023-07-13 16:38:07,720 - app - ERROR - name 'request' is not defined
+2023-07-13 16:38:07,725 - app - ERROR - name 'request' is not defined
+2023-07-13 16:38:07,725 - app - ERROR - name 'app' is not defined
+2023-07-13 16:38:07,727 - app - ERROR - name 'request' is not defined
+2023-07-13 16:38:07,727 - app - ERROR - name 'app' is not defined
+2023-07-13 16:38:07,729 - app - ERROR - name 'request' is not defined
+2023-07-13 16:38:07,729 - app - ERROR - name 'app' is not defined
+2023-07-13 16:38:07,736 - app - ERROR - name 'request' is not defined
+2023-07-13 16:38:07,757 - app - ERROR - name 'request' is not defined
+2023-07-13 16:38:07,762 - app - ERROR - name 'request' is not defined
+2023-07-13 16:38:07,763 - app - ERROR - name 'request' is not defined
+2023-07-13 16:38:07,763 - app - ERROR - name 'app' is not defined
+2023-07-13 16:38:07,763 - app - ERROR - name 'app' is not defined
+2023-07-13 16:57:40,646 - app - ERROR - send error
+2023-07-13 16:58:51,001 - app - ERROR - send error
+2023-07-13 16:59:05,955 - app - ERROR - Dashboard.on_hala() takes 1 positional argument but 2 were given
+2023-07-13 17:53:02,145 - app - ERROR - name 'ConcreteObserver' is not defined
+2023-07-13 17:53:02,281 - app - ERROR - name 'ConcreteObserver' is not defined
+2023-07-13 17:53:02,286 - app - ERROR - name 'ConcreteObserver' is not defined
+2023-07-13 17:53:02,291 - app - ERROR - name 'ConcreteObserver' is not defined
+2023-07-13 17:53:02,291 - app - ERROR - name 'app' is not defined
+2023-07-13 17:53:02,293 - app - ERROR - name 'ConcreteObserver' is not defined
+2023-07-13 17:53:02,293 - app - ERROR - name 'app' is not defined
+2023-07-13 17:53:02,295 - app - ERROR - name 'ConcreteObserver' is not defined
+2023-07-13 17:53:02,317 - app - ERROR - name 'ConcreteObserver' is not defined
+2023-07-13 17:53:02,321 - app - ERROR - name 'ConcreteObserver' is not defined
+2023-07-13 17:53:02,322 - app - ERROR - name 'ConcreteObserver' is not defined
+2023-07-13 17:53:02,322 - app - ERROR - name 'app' is not defined
+2023-07-13 17:53:02,322 - app - ERROR - name 'app' is not defined
