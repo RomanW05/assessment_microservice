@@ -1,11 +1,13 @@
-FROM python:3.8-slim-buster
+FROM python:3
 
-COPY /django_microservice /app
+COPY /django_microservice/requirements.txt /api/requirements.txt
 
-WORKDIR /app
+WORKDIR /api
 
 RUN pip3 install -r requirements.txt
 
-ENTRYPOINT [ "python" ]
+COPY /django_microservice /api
 
-CMD [ "wsgi.py" ]
+# ENTRYPOINT [ "python" ]
+
+# CMD [ "manage.py", "runserver" ]
