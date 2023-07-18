@@ -3,6 +3,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
+from rest_framework_simplejwt.views import TokenBlacklistView
 
 app_name = 'api'
 
@@ -14,6 +15,7 @@ urlpatterns = [
     path('logout/', views.Logout.as_view(), name="logout"),
     path('dashboard/', views.Dashboard.as_view(), name="dashboard"),
 
-    path('loggedin/', views.loggedin.as_view(), name="is logged in"),
-    path('redirect/', views.redirect.as_view(), name='redirect')
+    # path('loggedin/', views.loggedin.as_view(), name="is logged in"),
+    path('redirect/', views.redirect.as_view(), name='redirect'),
+    path('blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
 ]

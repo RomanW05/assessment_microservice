@@ -1,19 +1,14 @@
-from rest_framework import generics,status,views,permissions
+from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTStatelessUserAuthentication
-
 from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTStatelessUserAuthentication, JWTAuthentication
 
-from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 
-from .serializer import RegisterSerializer, LoginSerializer, LogoutSerializer, UserSerializer
-from .models import User
+from .serializer import RegisterSerializer, LoginSerializer
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import BlacklistMixin
 
 
 
@@ -41,80 +36,48 @@ class Login(generics.GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class Dashboard(APIView):
+class Dashboard(generics.ListCreateAPIView):
     template_name = "dashboard.html"
-    authentication_classes = [JWTStatelessUserAuthentication]
+    authentication_classes = [JWTAuthentication]
 
-    def get(self, request, format=None):
-        usernames = [user.username for user in User.objects.all()]
-        return render(request, self.template_name, usernames=usernames)  
+    def get(self, request):
+        return render(request, self.template_name)  
     
-import base64
-from rest_framework_simplejwt.authentication import JWTAuthentication
-import json
-class Logout(APIView):
 
-    serializer_class = LogoutSerializer
+class Logout(APIView):
     authentication_classes = [JWTStatelessUserAuthentication]
 
-    def post(self, request, format=None):
+    def post(self, request):
         print('Logging out')
         JWT_authenticator = JWTAuthentication()
         response = JWT_authenticator.authenticate(request)
         if response is not None:
-            # unpacking
             user , token = response
-            print("this is decoded token claims", token.payload, f'User: {user}')
+            print(BlacklistMixin.check_blacklist('token'))
+            # rest_framework_simplejwt.exceptions.TokenError: Token is blacklisted
+            try:
+                reply = BlacklistMixin.blacklist(token)
+                print('before verify')
+                
+                # print('verifying2')
+                if reply[1]:
+                    print('DONE')
+                    return HttpResponseRedirect('/login', status=status.HTTP_200_OK)
+                else:
+                    print('Token not blacklisted')
+                    return Response(status=status.HTTP_204_NO_CONTENT) 
+
+            except Exception as e:
+                print(e)
+                
         else:
             print("no token is provided in the header or the header is missing")
 
-        refresh = json.dumps(request.data)
-        refresh = json.loads(refresh)
-        # is_blacklisted = BlackListedToken()
-        # token = RefreshToken(refresh["refresh"])
-        # token.blacklist()
-        # print(is_blacklisted.check(**refresh))
-        # print(is_blacklisted, 'is blacklisted')
-
-        # serializer = self.serializer_class(data=refresh)
-        # serializer.is_valid(raise_exception=True)
-        # serializer.save()
-        # base64_token = base64.b64encode(bytes(refresh["refresh"], 'utf-8'))
-        # encoded = RefreshToken(refresh["refresh"])
-        token = request.data.get('refresh')
-        print(token, 'TOKENM')
-        token = RefreshToken(request.data.get('refresh'))
-        token.blacklist()
-        # print(encoded.blacklist())
-        print('logged out')
-        # return HttpResponseRedirect(redirect_to='/api/login')
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
-
-
-
-
-class loggedin(APIView):
-    authentication_classes = [JWTStatelessUserAuthentication]
-
-    def get(self, request):
-        
-        status = self.request.user
-        print(status, '<<<Status')
-
-        if self.request.user.is_authenticated:
-            usernames = [user.username for user in User.objects.all()]
-            print(usernames)
-            return Response(usernames)
-        else:
-            return Response("Not logged in")
-
-
-
-
-class redirect(TemplateView):
+class redirect(APIView):
     template_name = "dashboard3.html"
     
     def get(self, request):

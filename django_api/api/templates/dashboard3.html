@@ -5,13 +5,13 @@
     <html>
     <head>
         <title>Flask-SocketIO Test</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script> -->
         <script type="text/javascript" charset="utf-8">
 
 // const jwtAccess = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4OTYxNTUyNywiaWF0IjoxNjg5NjExOTI3LCJqdGkiOiI5N2Q1NGU0NDlmYmQ0OGU1OGY1ZmUxMDEwOTNjMjgyNyIsInVzZXJfaWQiOjJ9.83z48_iCZeJ0AzuxFj4vZqgU54V3QpXowi1xD5FK4H0';
-const jwtRefresh = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY5NDgwMDkwOSwiaWF0IjoxNjg5NjE2OTA5LCJqdGkiOiIzMTIxZWIxMzI4MjM0YjMxOWYxYzk5ZjY1NWFmY2U0MCIsInVzZXJfaWQiOjJ9.PrDR4R-OIHeby4N3ZrrlX35H1Kvw7PjFlS1_wXhBfiw"
-const access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk4MjU2OTA5LCJpYXQiOjE2ODk2MTY5MDksImp0aSI6ImFlYTgxN2U3MTg2NDQ4ZWFiYTMzMDA1N2ZjMWU0ZmRlIiwidXNlcl9pZCI6Mn0.mnFwJyajhfeMSdRDi4hWge6YdmQfm_9yG8EnYI_AkdI";
+const jwtRefresh = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY5NDg4NTE3NSwiaWF0IjoxNjg5NzAxMTc1LCJqdGkiOiJkNDg1ODNhNDc5YWE0NjlhOTdiOWRkMmQwMWIzZWYwYyIsInVzZXJfaWQiOjJ9.wLJc8iOCGbzRzSrGSdilHMM3PvwNfDPgQxcQBs2RrHk"
+const access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk4MzQxMTc1LCJpYXQiOjE2ODk3MDExNzUsImp0aSI6IjA2YWI2OGI2NTA4NjRlZDU5YjIxNTA1ZTdmZGE5YTU5IiwidXNlcl9pZCI6Mn0.TYjczZVLx6RZVdAkyWJ9GGz4oTbupzSPIWbntokyKSk";
 const jwtAccess = 'Bearer ' + access_token;
 function httpGet()
 {
@@ -49,19 +49,6 @@ function logoutPost()
     <body>
         <button onclick="httpGet()">Push me</button>
         <button onclick="logoutPost()">Logout</button>
-        <h1>Flask-SocketIO Test</h1>
-        <p>
-          Async mode is: <b>{{ async_mode }}</b><br>
-          Current transport is: <b><span id="transport"></span></b><br>
-          Average ping/pong latency: <b><span id="ping-pong"></span>ms</b>
-        </p>
-        <h2>Send:</h2>
-    
-        <form id="disconnect" method="POST" action="#">
-            <input type="submit" value="Disconnect">
-        </form>
-    
-        <h2>Receive:</h2>
-        <div id="log"></div>
+
     </body>
     </html>
