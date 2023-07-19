@@ -2,14 +2,13 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTStatelessUserAuthentication, JWTAuthentication
+from rest_framework_simplejwt.tokens import BlacklistMixin
+from rest_framework.permissions import IsAuthenticated
 
-from django.views.generic.base import TemplateView
-
-from .serializer import RegisterSerializer, LoginSerializer
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from rest_framework_simplejwt.tokens import BlacklistMixin
 
+from .serializer import RegisterSerializer, LoginSerializer, LogoutSerializer
 
 
 class Register(generics.ListCreateAPIView):
@@ -26,59 +25,76 @@ class Register(generics.ListCreateAPIView):
 
 class Login(generics.GenericAPIView):
     serializer_class = LoginSerializer
+    template_name = "login.html"
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     def get(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
 
 
-class Dashboard(generics.ListCreateAPIView):
+class Dashboard(generics.GenericAPIView):
     template_name = "dashboard.html"
-    authentication_classes = [JWTAuthentication]
+    authentication_classes = [JWTStatelessUserAuthentication]
+    
 
     def get(self, request):
-        return render(request, self.template_name)  
-    
-
-class Logout(APIView):
-    authentication_classes = [JWTStatelessUserAuthentication]
-
-    def post(self, request):
-        print('Logging out')
+        print('redirecting')
+        return redirect('a',status=status.HTTP_200_OK)
         JWT_authenticator = JWTAuthentication()
         response = JWT_authenticator.authenticate(request)
         if response is not None:
             user , token = response
-            print(BlacklistMixin.check_blacklist('token'))
-            # rest_framework_simplejwt.exceptions.TokenError: Token is blacklisted
+            try:
+                BlacklistMixin.check_blacklist(token)
+
+                # No error means token is valid
+                return redirect('api/login')
+            except:
+                print('exception executed')
+                return HttpResponseRedirect(redirect_to='/api/login', status=status.HTTP_308_PERMANENT_REDIRECT)
+        
+        # Not valid token
+        print('out of exception')
+        return HttpResponseRedirect(redirect_to='/api/login', status=status.HTTP_308_PERMANENT_REDIRECT)
+
+
+class Logout(generics.GenericAPIView):
+    serializer_class = LogoutSerializer
+    authentication_classes = [JWTStatelessUserAuthentication]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        JWT_authenticator = JWTAuthentication()
+        response = JWT_authenticator.authenticate(request)
+
+        if response is not None:
+            user , token = response
             try:
                 reply = BlacklistMixin.blacklist(token)
-                print('before verify')
-                
-                # print('verifying2')
                 if reply[1]:
-                    print('DONE')
-                    return HttpResponseRedirect('/login', status=status.HTTP_200_OK)
-                else:
-                    print('Token not blacklisted')
+                    return HttpResponseRedirect('/api/login', status=status.HTTP_308_PERMANENT_REDIRECT)
+                elif not reply[1]:
                     return Response(status=status.HTTP_204_NO_CONTENT) 
+                else:
+                    return Response(status=status.HTTP_204_NO_CONTENT)
 
             except Exception as e:
                 print(e)
-                
-        else:
-            print("no token is provided in the header or the header is missing")
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 
 class redirect(APIView):
     template_name = "dashboard3.html"
+    # authentication_classes = [JWTStatelessUserAuthentication]
+    # permission_classes = [IsAuthenticated]
     
     def get(self, request):
         return render(request, self.template_name, None)  
