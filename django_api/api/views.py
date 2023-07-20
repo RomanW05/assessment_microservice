@@ -37,34 +37,32 @@ class Login(generics.GenericAPIView):
 
 
 class Dashboard(generics.GenericAPIView):
-    template_name = "dashboard.html"
+    template_name = "delete.html"
     authentication_classes = [JWTStatelessUserAuthentication]
+    permission_classes = [IsAuthenticated]
     
-
     def get(self, request):
-        print('redirecting')
-        return redirect('a',status=status.HTTP_200_OK)
         JWT_authenticator = JWTAuthentication()
         response = JWT_authenticator.authenticate(request)
         if response is not None:
             user , token = response
             try:
                 BlacklistMixin.check_blacklist(token)
+                # Valid token
+                return render(request, self.template_name, None, status=status.HTTP_200_OK)
 
-                # No error means token is valid
-                return redirect('api/login')
             except:
-                print('exception executed')
-                return HttpResponseRedirect(redirect_to='/api/login', status=status.HTTP_308_PERMANENT_REDIRECT)
-        
-        # Not valid token
-        print('out of exception')
-        return HttpResponseRedirect(redirect_to='/api/login', status=status.HTTP_308_PERMANENT_REDIRECT)
+                # Error means token is not valid, pass and handle along with None response
+                pass
+
+        # Token is not valid
+        return HttpResponseRedirect(redirect_to='/api/login', status=status.HTTP_307_TEMPORARY_REDIRECT)
 
 
 class Logout(generics.GenericAPIView):
     serializer_class = LogoutSerializer
     authentication_classes = [JWTStatelessUserAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -75,10 +73,10 @@ class Logout(generics.GenericAPIView):
         if response is not None:
             user , token = response
             try:
-                reply = BlacklistMixin.blacklist(token)
-                if reply[1]:
+                result = BlacklistMixin.blacklist(token)
+                if result[1]:
                     return HttpResponseRedirect('/api/login', status=status.HTTP_308_PERMANENT_REDIRECT)
-                elif not reply[1]:
+                elif not result[1]:
                     return Response(status=status.HTTP_204_NO_CONTENT) 
                 else:
                     return Response(status=status.HTTP_204_NO_CONTENT)

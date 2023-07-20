@@ -43,7 +43,7 @@ function logoutPost()
 }
 function Dashboard()
 {
-    var theUrl = "http://localhost:8000/api/dashboard/";
+    var theUrl = "../dashboard";
 
     // const myRequest = new Request();
     const myHeaders = new Headers();
@@ -81,8 +81,8 @@ fetch(myRequest)
         </script>
     </head>
     <body>
-        <button onclick="httpGet()">Push me</button>
-        <button onclick="logoutPost()">Logout</button>
+        <!-- <button onclick="httpGet()">Push me</button>
+        <button onclick="logoutPost()">Logout</button> -->
         <button onclick="Dashboard()">Dashboard</button>
 
     </body>

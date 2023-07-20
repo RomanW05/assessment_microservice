@@ -5,11 +5,11 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 
-class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=68, min_length=6, write_only=True)
-    class Meta:
-        model = User
-        fields = ['email', 'username', 'password']
+# class UserSerializer(serializers.ModelSerializer):
+#     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
+#     class Meta:
+#         model = User
+#         fields = ['email', 'username', 'password']
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
@@ -71,10 +71,3 @@ class LogoutSerializer(serializers.Serializer):
         except TokenError:
             self.fail('bad_token')
 
-
-# class BlacklistSerializer(serializers.ModelSerializer):
-#     user = serializers.CharField(max_length=68, min_length=6, write_only=True)
-#     token = serializers.CharField(max_length=68, min_length=6, write_only=True)
-#     class Meta:
-#         model = BlackListedToken
-#         fields = ['user', 'token']
