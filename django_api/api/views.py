@@ -87,12 +87,20 @@ class Logout(generics.GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class Verify(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+    template_name = 'verify.html'
+
+    def get(self, request):
+        return render(request, self.template_name, status=status.HTTP_200_OK)
+        
+    def post(self, request):
+        pass
+
 
 
 class redirect(APIView):
     template_name = "dashboard3.html"
-    # authentication_classes = [JWTStatelessUserAuthentication]
-    # permission_classes = [IsAuthenticated]
     
     def get(self, request):
         return render(request, self.template_name, None)  

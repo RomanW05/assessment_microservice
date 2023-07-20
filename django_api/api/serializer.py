@@ -3,6 +3,8 @@ from .models import User
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+from .send_email import send_otp
+import random
 
 
 # class UserSerializer(serializers.ModelSerializer):
@@ -13,6 +15,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
+
     class Meta:
         model = User
         fields = ['email', 'username', 'password']
@@ -31,7 +34,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6,write_only=True)
     username = serializers.CharField(max_length=255, min_length=3)
+    has_credentials = serializers.CharField()
+    has_otp = serializers.CharField()
     tokens = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['password','username','tokens', 'has_credentials', 'has_otp']
 
     def get_tokens(self, obj):
         user = User.objects.get(username=obj['username'])
@@ -39,9 +48,6 @@ class LoginSerializer(serializers.ModelSerializer):
             'refresh': user.tokens()['refresh'],
             'access': user.tokens()['access']
         }
-    class Meta:
-        model = User
-        fields = ['password','username','tokens']
 
     def validate(self, attrs):
         username = attrs.get('username','')
@@ -51,11 +57,27 @@ class LoginSerializer(serializers.ModelSerializer):
             raise AuthenticationFailed('Invalid credentials, try again')
         if not user.is_active:
             raise AuthenticationFailed('Account disabled, contact admin')
+        otp = random.randint(000000,999999)
+        user.otp = otp
+        user.save()
+        send_otp(otp, user.email)
+        return
+    
         return {
             'email': user.email,
             'username': user.username,
             'tokens': user.tokens
         }
+    
+    def validate_otp(self, code):
+            # raise serializers.ValidationError("Blog post is not about Django")
+
+        return {
+            'email': self.validate.user.email,
+            'username': self.validate.user.username,
+            'tokens': self.validate.user.tokens
+        }
+
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()

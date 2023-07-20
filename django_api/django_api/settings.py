@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
+from django_api.config import email_config, api_config
+
+email_credentials = email_config()
+api_secret = api_config()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-15zm75=e69c0vw)2rs=*&t)i^@ur$lwp1abw%t8j0pj^4&5600'
+SECRET_KEY = api_secret['secret']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -45,9 +50,7 @@ INSTALLED_APPS = [
     
     'api',
     'authentication',
-    'corsheaders',
 ]
-
 
 
 REST_FRAMEWORK = {
@@ -58,11 +61,7 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.TokenAuthentication',
     ),
 }
-CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8000',
-]
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -149,7 +148,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "api.User"
-from datetime import timedelta
+
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=100),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=60),
@@ -160,3 +160,9 @@ SIMPLE_JWT = {
 }
 
 
+EMAIL_BACKEND = email_credentials["email_backend"]  # 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = email_credentials["email_host"]
+EMAIL_PORT = email_credentials["email_port"]
+EMAIL_USE_TLS = email_credentials["email_use_tls"]
+EMAIL_HOST_USER = email_credentials["email_host_user"]
+EMAIL_HOST_PASSWORD = email_credentials["email_host_password"]
