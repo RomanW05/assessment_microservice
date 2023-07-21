@@ -34,13 +34,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6,write_only=True)
     username = serializers.CharField(max_length=255, min_length=3)
-    has_credentials = serializers.CharField()
-    has_otp = serializers.CharField()
     tokens = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['password','username','tokens', 'has_credentials', 'has_otp']
+        fields = ['password','username','tokens']
+        read_only_fields = ('id', 'verified')
 
     def get_tokens(self, obj):
         user = User.objects.get(username=obj['username'])
@@ -60,23 +59,15 @@ class LoginSerializer(serializers.ModelSerializer):
         otp = random.randint(000000,999999)
         user.otp = otp
         user.save()
-        send_otp(otp, user.email)
-        return
+        # send_otp(otp, user.email)
+ 
     
         return {
             'email': user.email,
             'username': user.username,
             'tokens': user.tokens
         }
-    
-    def validate_otp(self, code):
-            # raise serializers.ValidationError("Blog post is not about Django")
 
-        return {
-            'email': self.validate.user.email,
-            'username': self.validate.user.username,
-            'tokens': self.validate.user.tokens
-        }
 
 
 class LogoutSerializer(serializers.Serializer):
@@ -84,6 +75,31 @@ class LogoutSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         self.token = attrs['refresh']
+        return attrs
+    
+    def save(self, **kwargs):
+        try:
+            print(self.token, 'serializer')
+            RefreshToken(token=self.token).blacklist()
+        except TokenError:
+            self.fail('bad_token')
+
+
+
+
+
+
+class OTPSerializer(serializers.Serializer):
+    otp = serializers.IntegerField()
+
+    class Meta:
+        model = User
+        fields = ['opt']
+
+
+    def validate(self, attrs):
+        user = User.objects.get(username=obj['username'])
+        self.otp = attrs['otp']
         return attrs
     
     def save(self, **kwargs):

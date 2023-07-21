@@ -5,6 +5,7 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework_simplejwt.views import TokenBlacklistView
 
+
 app_name = 'api'
 
 urlpatterns = [
@@ -18,4 +19,5 @@ urlpatterns = [
     # path('loggedin/', views.loggedin.as_view(), name="is logged in"),
     path('redirect/', views.redirect.as_view(), name='redirect'),
     path('blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
+
 ]

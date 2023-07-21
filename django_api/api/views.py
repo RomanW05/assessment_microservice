@@ -25,15 +25,18 @@ class Register(generics.ListCreateAPIView):
 
 class Login(generics.GenericAPIView):
     serializer_class = LoginSerializer
-    template_name = "login.html"
+    template_login = "login.html"
+    template_validate = "validate.html"
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
+        return render(request, self.template_validate, status=status.HTTP_202_ACCEPTED)  
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         return Response(status=status.HTTP_200_OK)
+
 
 
 class Dashboard(generics.GenericAPIView):
@@ -87,15 +90,7 @@ class Logout(generics.GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class Verify(generics.GenericAPIView):
-    serializer_class = LoginSerializer
-    template_name = 'verify.html'
 
-    def get(self, request):
-        return render(request, self.template_name, status=status.HTTP_200_OK)
-        
-    def post(self, request):
-        pass
 
 
 
@@ -105,3 +100,18 @@ class redirect(APIView):
     def get(self, request):
         return render(request, self.template_name, None)  
 
+
+
+# class verifyOTPView(APIView):
+
+#     def post(self, request):
+#         username = request.data["username"]
+#         otp = int(request.data["otp"])
+#         user = User.objects.get(username=username)
+#         if int(user.otp)==otp:
+#             user.verified = True
+#             #user.otp.delete()  #?? How to handle the otp, Should I set it to null??
+#             user.save()
+#             return Response("Verification Successful")
+#         else:
+#             raise PermissionDenied("OTP Verification failed")
