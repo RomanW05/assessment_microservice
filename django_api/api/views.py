@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTStatelessUserAuthentication, JWTAuthentication
 from rest_framework_simplejwt.tokens import BlacklistMixin
 from rest_framework.permissions import IsAuthenticated
+from .models import User
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect

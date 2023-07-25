@@ -1,5 +1,2 @@
 tx24io/
-db.sqlite3
-django_microservice/db.sqlite3
 Fullstack_assessment.pdf
-flask_microservice/credentials.ini
