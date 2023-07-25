@@ -40,4 +40,4 @@
 
 Notes:
 Some tests are from https://github.com/miguelgrinberg/Flask-SocketIO/blob/main/test_socketio.py
-2FA with JWT
+2FA with JWT.
