@@ -50,13 +50,21 @@ INSTALLED_APPS = [
     
     'api',
     'authentication',
+    'django_otp',
+    'django_otp.plugins.otp_totp',
 ]
 
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication',
-    )
+    ),
+    # 'DEFAULT_PARSER_CLASSES': (
+    #     'rest_framework.parsers.JSONParser',
+    # ),
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.JSONRenderer',
+    # ),
 
 }
 
@@ -155,6 +163,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'ACCESS_TOKEN_CLASS': ('api.custom_token.CustomTokenObtainPairSerializer',),
 }
 
 
@@ -164,3 +173,7 @@ EMAIL_PORT = email_credentials["email_port"]
 EMAIL_USE_TLS = email_credentials["email_use_tls"]
 EMAIL_HOST_USER = email_credentials["email_host_user"]
 EMAIL_HOST_PASSWORD = email_credentials["email_host_password"]
+
+JWT2FA_AUTH = {
+    'CODE_EXPIRATION_TIME': timedelta(days=5),
+}

@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True, db_index=True)
-    otp = models.IntegerField(default=000000)
+    otp = models.IntegerField(null=True,blank=True)
     verified = models.BooleanField(default=False)
 
     def __str__(self):

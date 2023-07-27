@@ -1,12 +1,16 @@
 from . import views
-from django.urls import path
+from django.urls import path, include
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from rest_framework_simplejwt.views import TokenBlacklistView
 
 
+
+
+
 app_name = 'api'
+
 
 urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
@@ -20,4 +24,8 @@ urlpatterns = [
     path('redirect/', views.redirect.as_view(), name='redirect'),
     path('blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
 
+    path('verify_otp/', views.verifyOTPView.as_view(), name='verify_otp'),
+
+    # path('totp/create', views.TOTPCreateView.as_view(), name='totp-create'),
+    # path(r'totp/login/(?P<token>[0-9]{6})/', views.TOTPVerifyView.as_view(), name='totp-login'),
 ]

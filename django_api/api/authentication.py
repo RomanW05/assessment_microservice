@@ -1,19 +1,12 @@
+from rest_framework.permissions import BasePermission
 
-# from rest_framework_simplejwt.authentication import JWTAuthentication
-# from .models import RevokedToken
-# from rest_framework.exceptions import AuthenticationFailed
+class RestrictedScopePermission(BasePermission):
+    def has_permission(self, request, view):
+        # Check if the 'scope' claim is present in the token payload
+        if 'scope' in request.auth:
+            # Restrict access if the 'scope' is not 'restricted'
+            return request.auth['scope'] == 'restricted'
 
-# class CustomJWTAuthentication(JWTAuthentication):
-#     def authenticate(self, request):
-#         try:
-#             user, token = super().authenticate(request)
-#         except AuthenticationFailed as af:
-#             raise af
+        # If 'scope' claim is not present, deny access
+        return False
 
-#         if self.is_token_revoked(token):
-#             raise AuthenticationFailed("Invalid token.")
-
-#         return user, token
-
-#     def is_token_revoked(self, token):
-#         return RevokedToken.objects.filter(token=token).exists()

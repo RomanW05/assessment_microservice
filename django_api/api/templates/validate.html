@@ -1,1 +1,20 @@
 <p>validating otp</p>
+
+curl -X POST -d "username=test&password=123" http://127.0.0.1:8000/api/login/
+
+curl -X POST -H "Accept-Charset: utf-8" -H "Content-Type: application/x-www-form-urlencoded" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MDMyMjAxLCJpYXQiOjE2OTAzOTIyMDEsImp0aSI6IjI2YjY3ZWFlMTQxODRhYmJiMGJmYWNhMWE4MzZkMjY4IiwidXNlcl9pZCI6Mn0.Ct-KtfEFubqc5fXt3z6cYmdU0zGEOt-QteUNHtzxcHU" \
+-d "otp=071254" http://127.0.0.1:8000/api/verify_otp/
+
+
+
+
+
+
+
+
+
+
+
+"refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY5NTU2Mjg5NiwiaWF0IjoxNjkwMzc4ODk2LCJqdGkiOiI5YzZkNTNiM2Q1MjY0YWJkYWYxZjlkZDZiMTE2ZWVmNCIsInVzZXJfaWQiOjJ9.42eC9AXXlxnWMq8WiO1PegDR96AmQraVwE8ITHj-crQ",
+"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MDE4ODk2LCJpYXQiOjE2OTAzNzg4OTYsImp0aSI6ImNjZTdiYzJmNGJjOTRkYjM4MmNiNzRlZTk2MjNkZjFjIiwidXNlcl9pZCI6Mn0.B6wBGj5EABGgsMOWqBF7W8X9pGfd9VQxRPnsHkGFhgU"
