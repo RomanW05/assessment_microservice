@@ -3,15 +3,19 @@
 curl -X POST -d "username=test&password=123" http://127.0.0.1:8000/api/login/
 
 curl -X POST -H "Accept-Charset: utf-8" -H "Content-Type: application/x-www-form-urlencoded" \
--H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MDMyMjAxLCJpYXQiOjE2OTAzOTIyMDEsImp0aSI6IjI2YjY3ZWFlMTQxODRhYmJiMGJmYWNhMWE4MzZkMjY4IiwidXNlcl9pZCI6Mn0.Ct-KtfEFubqc5fXt3z6cYmdU0zGEOt-QteUNHtzxcHU" \
--d "otp=071254" http://127.0.0.1:8000/api/verify_otp/
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MDc5NzMzLCJpYXQiOjE2OTA0Mzk3MzMsImp0aSI6ImM4YTRmNDhmY2RiMzQzYjU5M2JiNzM4ZWViOTRmZjNiIiwidXNlcl9pZCI6Mn0.-d9aYizuRb2kQe8rcuzqAiZKA2rx1To7kgAZ3QMYrIA" \
+-d "otp=066297" http://127.0.0.1:8000/api/verify_otp/
 
 
 
 
+curl \
+-X GET \
+-H "Accept-Charset: utf-8" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MDgzOTM5LCJpYXQiOjE2OTA0NDM5MzksImp0aSI6Ijg5YWUyYWNjZjc4MDQwNGY4YzY1Mjc3YTBjZDZkZjFmIiwidXNlcl9pZCI6Mn0.mUBKVKK753YkfVKt0C8d4UkTcBllshPWb83ch5Tss9c" \
+http://127.0.0.1:8000/api/analyzetoken/
 
-
-
+curl -X GET http://127.0.0.1:8000/api/redirect/
 
 
 

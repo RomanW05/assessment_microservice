@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'authentication',
     'django_otp',
     'django_otp.plugins.otp_totp',
+    'oauth2_provider',
 ]
 
 

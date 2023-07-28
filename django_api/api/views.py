@@ -12,55 +12,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .authentication import RestrictedScopePermission
+from .authentication import HasRestrictedScope
 from .models import User
 from .serializer import RegisterSerializer, LoginSerializer, LogoutSerializer, CustomTokenObtainPairSerializer
 
 
-
-
-# def get_user_totp_device(self, user, confirmed=None):
-#     devices = devices_for_user(user, confirmed=confirmed)
-#     for device in devices:
-#         if isinstance(device, TOTPDevice):
-#             return device
-
-# class TOTPCreateView(APIView):
-#     """
-#     Use this endpoint to set up a new TOTP device
-#     """
-#     permission_classes = [IsAuthenticated]
-    
-#     def get(self, request, format=None):
-#         user = request.user
-#         device = get_user_totp_device(self, user)
-#         if not device:
-#             device = user.totpdevice_set.create(confirmed=False)
-#         url = device.config_url
-#         return Response(url, status=status.HTTP_201_CREATED)
-
-# class TOTPVerifyView(APIView):
-#     """
-#     Use this endpoint to verify/enable a TOTP device
-#     """
-#     permission_classes = [IsAuthenticated]
-    
-#     def post(self, request, token, format=None):
-#         user = request.user
-#         device = get_user_totp_device(self, user)
-#         if not device == None and device.verify_token(token):
-#             if not device.confirmed:
-#                 device.confirmed = True
-#                 device.save()
-#             return Response(True, status=status.HTTP_200_OK)
-#         return Response(status=status.HTTP_400_BAD_REQUEST)
-# class VeriyOTP(APIView):
-#     serializer_class = OTPSerializer
-
-#     def post(self, request):
-#         data = request.data
-#         serializer = self.serializer_class(data=data)
-#         serializer.is_valid(raise_exception=True)
 
 
 class Register(generics.ListCreateAPIView):
@@ -89,6 +45,7 @@ class Login(generics.GenericAPIView):
             'username': request.data['username'],
             'password': request.data['password']
             })
+
         print(data['otp'])
 
         # user = authenticate(request, username=request.data['username'], password=request.data['password'])
@@ -107,50 +64,10 @@ class Login(generics.GenericAPIView):
     
 
 
-
-# class verifyOTPView(APIView):
-#     permission_classes = [RestrictedScopePermission]
-
-#     def post(self, request):
-#         username = request.data["username"]
-#         otp = int(request.data["otp"])
-#         user = User.objects.get(username=username)
-#         if int(user.otp)==otp:
-#             user.verified = True
-#             #user.otp.delete()  #?? How to handle the otp, Should I set it to null??
-#             user.save()
-#             return Response("Verification Successful")
-#         else:
-#             raise Exception('Not verified')
-#             raise PermissionDenied("OTP Verification failed")
-        
-
-
-
-    
-# class VerifyOTP(APIView):
-#     serializer_class = OTPSerializer
-#     permission_classes = [IsAuthenticatedWithUser]
-
-#     def get(self, request):
-#         user = request.user
-#         return Response({"message": f"Hello, {user.username}!"}, status=status.HTTP_200_OK)
-    
-#     def post(self, request):
-#         serializer = self.serializer_class(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         # permission_classes = [IsAuthenticated]
-#         return Response(status=status.HTTP_200_OK)
-
-# class TwoFactorAuth(generics.GenericAPIView):
-#     permission_classes = [IsAuthenticated]
-
-
 class Dashboard(generics.GenericAPIView):
     template_name = "delete.html"
     authentication_classes = [JWTStatelessUserAuthentication]
-    permission_classes = [IsAuthenticated, RestrictedScopePermission]
-    # permission_classes = [RestrictedScopePermission]
+    permission_classes = [HasRestrictedScope]
     
     def get(self, request):
         JWT_authenticator = JWTAuthentication()
@@ -203,6 +120,8 @@ class Logout(generics.GenericAPIView):
 
 
 class redirect(APIView):
+    authentication_classes = [JWTStatelessUserAuthentication]
+    permission_classes = [IsAuthenticated]
     template_name = "dashboard3.html"
     
     def get(self, request):
@@ -245,3 +164,38 @@ class verifyOTPView(APIView):
         
         else:
             return Response("Verification Failed")
+
+
+
+class analyzeToken(APIView):
+
+
+    def get(self, request):
+        print(request.auth, 'request.auth')
+        token = request.headers["Authorization"]
+        token = token[7:]
+        access_token = AccessToken(token)
+        print(request.auth.payload, 'request.auth.payload')
+        print(access_token, 'access_token')
+        payload_data = access_token.payload
+        print(payload_data, 'payload_data')
+        print(payload_data['user_id'], 'payload_data.user_id')
+        return Response("Checked") 
+
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user)
+
+        # Add extra responses here
+        data['username'] = self.user.username
+        data['groups'] = self.user.groups.values_list('name', flat=True)
+        return data
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer

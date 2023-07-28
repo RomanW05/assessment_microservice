@@ -1,8 +1,6 @@
-from rest_framework import serializers
-
 from django.contrib import auth
-# from django.utils.translation import ugettext_lazy as _
 
+from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -12,15 +10,28 @@ import base64
 import pyotp
 import random
 
-from .send_email import send_otp
 from .config import otp_config
 from .models import User
-
+from .send_email import send_otp
 
 SECRET_DATA = otp_config()
 SECRET_KEY = SECRET_DATA['secret']
 SECRET_KEY_ENCODED = base64.b32encode(SECRET_KEY.encode()).decode()
 
+
+
+
+
+
+
+# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+#     @classmethod
+#     def get_token(cls, user):
+#         token = super().get_token(user)
+#         token['scope'] = 'restricted'
+#         return token
+    
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -51,19 +62,23 @@ class LoginSerializer(serializers.ModelSerializer):
         fields = ['password','username','tokens']
         read_only_fields = ('id', 'verified')
 
+    
     def get_tokens(self, obj):
+        print('inside get token')
         data = super().validate(obj)
 
         # Customize the response data with additional claims (scopes)
         data['scope'] = 'restricted'
+        print(data, 'data')
 
-        user = User.objects.get(username=obj['username'])
         # return data
         print(data['tokens']()['access'])
         return {
             'refresh': data['tokens']()['refresh'],
             'access': data['tokens']()['access']
         }
+    
+        user = User.objects.get(username=obj['username'])
         return {
             'refresh': user.tokens()['refresh'],
             'access': user.tokens()['access']
@@ -92,6 +107,9 @@ class LoginSerializer(serializers.ModelSerializer):
             'username': user.username,
             'tokens': user.tokens
         }
+    
+
+
 
 
 
