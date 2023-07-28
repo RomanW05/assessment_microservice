@@ -2,6 +2,7 @@ from django.contrib import auth
 
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
+# from rest_framework.settings import SIMPLE_JWT
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken, TokenError
@@ -14,23 +15,12 @@ from .config import otp_config
 from .models import User
 from .send_email import send_otp
 
+# print(SIMPLE_JWT)
 SECRET_DATA = otp_config()
 SECRET_KEY = SECRET_DATA['secret']
 SECRET_KEY_ENCODED = base64.b32encode(SECRET_KEY.encode()).decode()
 
 
-
-
-
-
-
-# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-
-#     @classmethod
-#     def get_token(cls, user):
-#         token = super().get_token(user)
-#         token['scope'] = 'restricted'
-#         return token
     
 
 
@@ -55,7 +45,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=3,write_only=True)
     username = serializers.CharField(max_length=255, min_length=3)
-    tokens = serializers.SerializerMethodField()
+    # tokens = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -64,25 +54,26 @@ class LoginSerializer(serializers.ModelSerializer):
 
     
     def get_tokens(self, obj):
-        print('inside get token')
         data = super().validate(obj)
 
         # Customize the response data with additional claims (scopes)
-        data['scope'] = 'restricted'
+        # data['scope'] = 'restricted'
         print(data, 'data')
+        # token = self.get_token(obj['username'])
+        # print(token, 'token')
 
         # return data
-        print(data['tokens']()['access'])
+        # print(data['tokens']()['access'])
         return {
             'refresh': data['tokens']()['refresh'],
             'access': data['tokens']()['access']
         }
     
-        user = User.objects.get(username=obj['username'])
-        return {
-            'refresh': user.tokens()['refresh'],
-            'access': user.tokens()['access']
-        }
+        # user = User.objects.get(username=obj['username'])
+        # return {
+        #     'refresh': user.tokens()['refresh'],
+        #     'access': user.tokens()['access']
+        # }
 
     def validate(self, attrs):
         username = attrs.get('username','')
@@ -100,13 +91,23 @@ class LoginSerializer(serializers.ModelSerializer):
         user.save()
         # send_otp(otp, user.email)
  
-    
+        # return user
         return {
             'otp': user.otp,
             'email': user.email,
             'username': user.username,
             'tokens': user.tokens
         }
+    
+    @classmethod
+    def get_token(cls, user):
+        print('classmethod')
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['scope'] = 'Full'
+
+        return token
     
 
 
@@ -163,24 +164,90 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, token):
+# class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     @classmethod
+#     def get_tokens(cls, token):
 
-        access_token = AccessToken(token)
-        user = access_token.user
+#         access_token = AccessToken(token)
+#         user = access_token.user
+#         token = super().get_token(user)
+
+#         # Customize the token payload with additional claims (scopes)
+#         # In this example, we set the scope to 'full'
+#         token['scope'] = 'full'
+
+#         return token
+
+#     def validate(self, attrs):
+#         data = super().validate(attrs)
+
+#         # Customize the response data with additional claims (scopes)
+#         data['scope'] = 'full'
+
+#         return data
+
+
+class RestrictedAccessSerializer(TokenObtainPairSerializer):
+    password = serializers.CharField(max_length=68, min_length=3,write_only=True)
+    username = serializers.CharField(max_length=255, min_length=3)
+    # tokens = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['password','username','tokens']
+        read_only_fields = ('id', 'verified')
+
+
+    # def validate(self, attrs):
+    #     data = super().validate(attrs)
+
+    #     return data
+
+    def validate(self, attrs):
+        username = attrs.get('username','')
+        password = attrs.get('password','')
+        user = auth.authenticate(username=username,password=password)
+        if not user:
+            raise AuthenticationFailed('Invalid credentials, try again')
+        if not user.is_active:
+            raise AuthenticationFailed('Account disabled, contact admin')
+        
+        
+        totp = pyotp.TOTP(SECRET_KEY_ENCODED, interval=6000)
+        totp.now()
+        user.otp = f'{totp.now()}'
+        user.save()
+        # send_otp(otp, user.email)
+ 
+        # return user
+        return {
+            'otp': user.otp,
+            'email': user.email,
+            'username': user.username,
+            'tokens': user.tokens
+        }
+    
+    @classmethod
+    def get_token(cls, user):
         token = super().get_token(user)
 
-        # Customize the token payload with additional claims (scopes)
-        # In this example, we set the scope to 'full'
-        token['scope'] = 'full'
+        # Add custom claims
+        token['scope'] = 'restricted'
 
         return token
 
+
+class FullAccessSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
 
-        # Customize the response data with additional claims (scopes)
-        data['scope'] = 'full'
-
         return data
+    
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['scope'] = 'Full'
+
+        return token

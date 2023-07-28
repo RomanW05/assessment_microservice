@@ -7,8 +7,6 @@ from rest_framework_simplejwt.views import TokenBlacklistView
 
 
 
-
-
 app_name = 'api'
 
 
@@ -20,13 +18,11 @@ urlpatterns = [
     path('logout/', views.Logout.as_view(), name="logout"),
     path('dashboard/', views.Dashboard.as_view(), name="dashboard"),
 
-    # path('loggedin/', views.loggedin.as_view(), name="is logged in"),
     path('redirect/', views.redirect.as_view(), name='redirect'),
     path('blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
 
-    path('verify_otp/', views.verifyOTPView.as_view(), name='verify_otp'),
+    # path('verify_otp/', views.verifyOTPView.as_view(), name='verify_otp'),
     path('analyzetoken/', views.analyzeToken.as_view(), name='analyzetoken'),
 
-    # path('totp/create', views.TOTPCreateView.as_view(), name='totp-create'),
-    # path(r'totp/login/(?P<token>[0-9]{6})/', views.TOTPVerifyView.as_view(), name='totp-login'),
+    path('token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
 ]

@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'authentication',
     'django_otp',
     'django_otp.plugins.otp_totp',
-    'oauth2_provider',
 ]
 
 
@@ -160,11 +159,11 @@ AUTH_USER_MODEL = "api.User"
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=100),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=60),
-    'AUTH_HEADER_TYPES': ('Bearer', 'JWT',),
+    'AUTH_HEADER_TYPES': ('Bearer',),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'ACCESS_TOKEN_CLASS': ('api.custom_token.CustomTokenObtainPairSerializer',),
+    # 'ACCESS_TOKEN_CLASS': ('api.custom_token.CustomTokenObtainPairSerializer',),
 }
 
 

@@ -12,10 +12,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .authentication import HasRestrictedScope
+from .authentication import HasRestrictedScope, HasFullScope
 from .models import User
-from .serializer import RegisterSerializer, LoginSerializer, LogoutSerializer, CustomTokenObtainPairSerializer
+from .serializer import RegisterSerializer, LoginSerializer, LogoutSerializer, RestrictedAccessSerializer
 
+from django_api import settings
 
 
 
@@ -46,17 +47,6 @@ class Login(generics.GenericAPIView):
             'password': request.data['password']
             })
 
-        print(data['otp'])
-
-        # user = authenticate(request, username=request.data['username'], password=request.data['password'])
-        
-        # next_route_url = reverse('/api/verify_otp') + f"?username={request.data['username']}"
-        # return HttpResponseRedirect(f"/api/verify_otp/{request.data['username']}")
-        
-        # return HttpResponseRedirect('/api/verify_otp', username=request.data['username'])
-        # return HttpResponseRedirect()
-        
-        # return render(request, status=status.HTTP_202_ACCEPTED)  
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def get(self, request):
@@ -134,36 +124,36 @@ class redirect(APIView):
 from rest_framework_simplejwt.tokens import AccessToken, Token
 
 
-class verifyOTPView(APIView):
-    serializer_class = CustomTokenObtainPairSerializer
-    authentication_classes = [JWTStatelessUserAuthentication]
-    permission_classes = [IsAuthenticated]
+# class verifyOTPView(APIView):
+#     serializer_class = CustomTokenObtainPairSerializer
+#     authentication_classes = [JWTStatelessUserAuthentication]
+#     permission_classes = [IsAuthenticated, HasRestrictedScope]
 
 
-    def post(self, request):
-        token = request.headers["Authorization"]
-        otp = request.data["otp"]
+#     def post(self, request):
+#         token = request.headers["Authorization"]
+#         otp = request.data["otp"]
+#         strip = settings.SIMPLE_JWT['AUTH_HEADER_TYPES']
+#         token = token[7:]
+#         access_token = AccessToken(token)
+#         payload_data = access_token.payload
+#         print(payload_data, 'payload_data')
+#         print(payload_data['user_id'], 'payload_data.user_id')
 
-        token = token[7:]
-        access_token = AccessToken(token)
-        payload_data = access_token.payload
-        print(payload_data, 'payload_data')
-        print(payload_data['user_id'], 'payload_data.user_id')
+#         user = User.objects.get(pk=payload_data['user_id'])
 
-        user = User.objects.get(pk=payload_data['user_id'])
+#         # username = payload_data.get('username')
+#         print(user, 'username')
 
-        # username = payload_data.get('username')
-        print(user, 'username')
-
-        user = User.objects.get(username=user)
-        print(user.otp, 'user.otp')
-        if str(user.otp)==otp:
-            user.verified = True
-            user.save()
-            return Response("Verification Successful")
+#         user = User.objects.get(username=user)
+#         print(user.otp, 'user.otp')
+#         if str(user.otp)==otp:
+#             user.verified = True
+#             user.save()
+#             return Response("Verification Successful")
         
-        else:
-            return Response("Verification Failed")
+#         else:
+#             return Response("Verification Failed")
 
 
 
@@ -183,19 +173,9 @@ class analyzeToken(APIView):
         return Response("Checked") 
 
 
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
-        refresh = self.get_token(self.user)
-
-        # Add extra responses here
-        data['username'] = self.user.username
-        data['groups'] = self.user.groups.values_list('name', flat=True)
-        return data
-
-
 class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+    serializer_class = RestrictedAccessSerializer
