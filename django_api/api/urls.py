@@ -25,4 +25,5 @@ urlpatterns = [
     path('analyzetoken/', views.analyzeToken.as_view(), name='analyzetoken'),
 
     path('token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('verify_otp/', views.verifyOTPView.as_view(), name='verify otp')
 ]

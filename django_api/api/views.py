@@ -15,7 +15,7 @@ from django.urls import reverse
 
 from .authentication import HasRestrictedScope, HasFullScope
 from .models import User
-from .serializer import RegisterSerializer, LoginSerializer, LogoutSerializer, RestrictedAccessSerializer
+from .serializer import RegisterSerializer, LoginSerializer, LogoutSerializer, RestrictedAccessSerializer, OTPSerializer
 
 from django_api import settings
 
@@ -35,7 +35,7 @@ class Register(generics.ListCreateAPIView):
 
 
 class Login(generics.ListCreateAPIView):
-    serializer_class = LoginSerializer
+    serializer_class = RestrictedAccessSerializer
     # serializer_class = CustomTokenObtainPairSerializer
     template_login = "login.html"
     template_validate = "validate.html"
@@ -125,36 +125,45 @@ class redirect(APIView):
 from rest_framework_simplejwt.tokens import AccessToken, Token
 
 
-# class verifyOTPView(APIView):
-#     serializer_class = CustomTokenObtainPairSerializer
-#     authentication_classes = [JWTStatelessUserAuthentication]
-#     permission_classes = [IsAuthenticated, HasRestrictedScope]
+class verifyOTPView(APIView):
+    serializer_class = OTPSerializer
+    authentication_classes = [JWTStatelessUserAuthentication]
+    permission_classes = [IsAuthenticated, HasRestrictedScope]
 
 
-#     def post(self, request):
-#         token = request.headers["Authorization"]
-#         otp = request.data["otp"]
-#         strip = settings.SIMPLE_JWT['AUTH_HEADER_TYPES']
-#         token = token[7:]
-#         access_token = AccessToken(token)
-#         payload_data = access_token.payload
-#         print(payload_data, 'payload_data')
-#         print(payload_data['user_id'], 'payload_data.user_id')
-
-#         user = User.objects.get(pk=payload_data['user_id'])
-
-#         # username = payload_data.get('username')
-#         print(user, 'username')
-
-#         user = User.objects.get(username=user)
-#         print(user.otp, 'user.otp')
-#         if str(user.otp)==otp:
-#             user.verified = True
-#             user.save()
-#             return Response("Verification Successful")
+    def post(self, request):
+        token = request.headers["Authorization"]
+        otp = request.data["otp"]
+        serializer = self.serializer_class(data=request)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validate(attrs={
+            'username': request.data['username'],
+            'password': request.data['password']
+            })
         
-#         else:
-#             return Response("Verification Failed")
+
+
+        strip = settings.SIMPLE_JWT['AUTH_HEADER_TYPES']
+        token = token[7:]
+        access_token = AccessToken(token)
+        payload_data = access_token.payload
+        print(payload_data, 'payload_data')
+        print(payload_data['user_id'], 'payload_data.user_id')
+
+        user = User.objects.get(pk=payload_data['user_id'])
+
+        # username = payload_data.get('username')
+        print(user, 'username')
+
+        user = User.objects.get(username=user)
+        print(user.otp, 'user.otp')
+        if str(user.otp)==otp:
+            user.verified = True
+            user.save()
+            return Response("Verification Successful")
+        
+        else:
+            return Response("Verification Failed")
 
 
 

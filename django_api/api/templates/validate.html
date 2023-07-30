@@ -12,8 +12,9 @@ curl -X POST -H "Accept-Charset: utf-8" -H "Content-Type: application/x-www-form
 curl \
 -X GET \
 -H "Accept-Charset: utf-8" \
--H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MTc2MDcxLCJpYXQiOjE2OTA1MzYwNzEsImp0aSI6IjFkYWJkNGIwM2U1YTRlZGNhOWY2YWYwOTIwMTU3YmVkIiwidXNlcl9pZCI6Miwic2NvcGUiOiJyZXN0cmljdGVkIn0.ippThdQ1dJeS5Hj-mhHe2oOh9UJhkbYvjcmfiEjAeQo" \
-http://127.0.0.1:8000/api/redirect/
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MzU3NzkyLCJpYXQiOjE2OTA3MTc3OTIsImp0aSI6ImJjMmZhNzA1MGYwOTQ0YTY4ZWZmYmZhMzAzYWIwYmI4IiwidXNlcl9pZCI6Mn0.ivEAvNzkcR4j2RZ3IShD_M746W1rxJ_ZDC1dgMTo600" \
+-d "otp:978874" \
+http://127.0.0.1:8000/api/verify_otp/
 
 curl -X GET http://127.0.0.1:8000/api/redirect/
 
