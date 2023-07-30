@@ -8,6 +8,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken, TokenError
 
 import base64
+import json
 import pyotp
 import random
 
@@ -24,28 +25,13 @@ SECRET_KEY_ENCODED = base64.b32encode(SECRET_KEY.encode()).decode()
     
 
 
-class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=68, min_length=3, write_only=True)
 
-    class Meta:
-        model = User
-        fields = ['email', 'username', 'password']
-
-    def validate(self, attrs):
-        email = attrs.get('email', '')
-        username = attrs.get('username', '')
-        if not username.isalnum():
-            raise serializers.ValidationError(self.default_error_messages)
-        return attrs
-    
-    def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
 
 
 class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=3,write_only=True)
     username = serializers.CharField(max_length=255, min_length=3)
-    # tokens = serializers.SerializerMethodField()
+    tokens = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -114,45 +100,6 @@ class LoginSerializer(serializers.ModelSerializer):
 
 
 
-class LogoutSerializer(serializers.Serializer):
-    refresh = serializers.CharField()
-
-    def validate(self, attrs):
-        self.token = attrs['refresh']
-        return attrs
-    
-    def save(self, **kwargs):
-        try:
-            print(self.token, 'serializer')
-            RefreshToken(token=self.token).blacklist()
-        except TokenError:
-            self.fail('bad_token')
-
-
-
-
-
-
-
-class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = User
-        fields = "__all__"
-        read_only_fields = ('id', 'verified')
-
-    def create(self, validated_data):
-        user = super(UserSerializer, self).create(validated_data)
-        user.set_password(validated_data['password'])
-
-        totp = pyotp.TOTP(SECRET_KEY_ENCODED)
-        totp.now()
-        user.otp = totp.now()
-        user.save()
-
-        send_otp(user.otp, user.email)
-        return user
 
 
 
@@ -163,34 +110,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 
-
-# class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-#     @classmethod
-#     def get_tokens(cls, token):
-
-#         access_token = AccessToken(token)
-#         user = access_token.user
-#         token = super().get_token(user)
-
-#         # Customize the token payload with additional claims (scopes)
-#         # In this example, we set the scope to 'full'
-#         token['scope'] = 'full'
-
-#         return token
-
-#     def validate(self, attrs):
-#         data = super().validate(attrs)
-
-#         # Customize the response data with additional claims (scopes)
-#         data['scope'] = 'full'
-
-#         return data
 
 
 class RestrictedAccessSerializer(TokenObtainPairSerializer):
     password = serializers.CharField(max_length=68, min_length=3,write_only=True)
     username = serializers.CharField(max_length=255, min_length=3)
-    # tokens = serializers.SerializerMethodField()
+    tokens = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -198,12 +123,8 @@ class RestrictedAccessSerializer(TokenObtainPairSerializer):
         read_only_fields = ('id', 'verified')
 
 
-    # def validate(self, attrs):
-    #     data = super().validate(attrs)
-
-    #     return data
-
     def validate(self, attrs):
+        print('validating\n')
         username = attrs.get('username','')
         password = attrs.get('password','')
         user = auth.authenticate(username=username,password=password)
@@ -220,21 +141,74 @@ class RestrictedAccessSerializer(TokenObtainPairSerializer):
         # send_otp(otp, user.email)
  
         # return user
+        print('validating success\n')
+        tokens = self.get_token(user=user)
+        # print(tokens, 'before returning')
+
+        # print(tokens.access_tokens, 'tokens.access_tokens')
+        # print(tokens['access'])
+        # print( 'access token', tokens['access'], 'refresh token', tokens['refresh'])
+        print('got tokens\n')
+        token_access = tokens['access']
+        token_refresh = tokens['refresh']
+        print(token_access, token_refresh)
+        return json.dumps(tokens)
         return {
             'otp': user.otp,
             'email': user.email,
             'username': user.username,
-            'tokens': user.tokens
+            'access': tokens['access'],
+            'refresh': tokens['refresh'],
         }
     
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
+        print(token.token_type)
 
         # Add custom claims
         token['scope'] = 'restricted'
+        print(token.access_token.token_type, 'access token override get_token\n')
+        # RefreshToken.access_token
+        # RefreshToken.
+        # return token
+        return {
+            "refresh":token,
+            "access": token.access_token
+        }
 
-        return token
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class FullAccessSerializer(TokenObtainPairSerializer):
@@ -251,3 +225,37 @@ class FullAccessSerializer(TokenObtainPairSerializer):
         token['scope'] = 'Full'
 
         return token
+    
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    def validate(self, attrs):
+        self.token = attrs['refresh']
+        return attrs
+    
+    def save(self, **kwargs):
+        try:
+            print(self.token, 'serializer')
+            RefreshToken(token=self.token).blacklist()
+        except TokenError:
+            self.fail('bad_token')
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(max_length=68, min_length=3, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['email', 'username', 'password']
+
+    def validate(self, attrs):
+        email = attrs.get('email', '')
+        username = attrs.get('username', '')
+        if not username.isalnum():
+            raise serializers.ValidationError(self.default_error_messages)
+        return attrs
+    
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)

@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from rest_framework_simplejwt.authentication import JWTStatelessUserAuthentication, JWTAuthentication
 from rest_framework_simplejwt.tokens import BlacklistMixin
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from django.contrib.auth import authenticate
 from django.http import HttpResponseRedirect
@@ -33,7 +34,7 @@ class Register(generics.ListCreateAPIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class Login(generics.GenericAPIView):
+class Login(generics.ListCreateAPIView):
     serializer_class = LoginSerializer
     # serializer_class = CustomTokenObtainPairSerializer
     template_login = "login.html"
@@ -175,7 +176,8 @@ class analyzeToken(APIView):
 
 
 
-from rest_framework_simplejwt.views import TokenObtainPairView
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = RestrictedAccessSerializer
+
