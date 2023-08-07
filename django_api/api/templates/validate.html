@@ -1,25 +1,14 @@
-<p>validating otp</p>
-
+# login
 curl -X POST -d "username=test&password=123" http://127.0.0.1:8000/api/login/
 
-curl -X POST -H "Accept-Charset: utf-8" -H "Content-Type: application/x-www-form-urlencoded" \
--H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MDc5NzMzLCJpYXQiOjE2OTA0Mzk3MzMsImp0aSI6ImM4YTRmNDhmY2RiMzQzYjU5M2JiNzM4ZWViOTRmZjNiIiwidXNlcl9pZCI6Mn0.-d9aYizuRb2kQe8rcuzqAiZKA2rx1To7kgAZ3QMYrIA" \
--d "otp=066297" http://127.0.0.1:8000/api/verify_otp/
+# verify otp
+curl -X POST -H "Accept-Charset: utf-8" -H "Content-Type: application/x-www-form-urlencoded" ^
+-H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAwMDYzODc0LCJqdGkiOiJjYWMwNjI3Yjg5MDQ0M2M5OWMxNGRlZGM5MDdjNTdkYSIsInVzZXJfaWQiOjIsInNjb3BlIjoicmVzdHJpY3RlZCJ9.aLez3nWKrVUCkmAdDv1iKI8ZqmnRH8uBpjvsIUTW5A0" ^
+--data "otp=535031" http://127.0.0.1:8000/api/verify_otp/
 
+# verify access
+curl -X GET -H "Accept-Charset: utf-8" -H "Content-Type: application/x-www-form-urlencoded" ^
+-H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAwMDY0MDU2LCJqdGkiOiI0M2YzNjZiZGQyYmM0MmY1YWFlNDM5NWI0NTIwNTc5MyIsInVzZXJfaWQiOjIsInNjb3BlIjoiZnVsbCJ9.1SCS7L9bx77oK1CDQCdDM-uY4kaVv_q_ZdhcH61F60o" ^
+http://127.0.0.1:8000/api/dashboard/
 
-
-
-curl \
--X GET \
--H "Accept-Charset: utf-8" \
--H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MzU3NzkyLCJpYXQiOjE2OTA3MTc3OTIsImp0aSI6ImJjMmZhNzA1MGYwOTQ0YTY4ZWZmYmZhMzAzYWIwYmI4IiwidXNlcl9pZCI6Mn0.ivEAvNzkcR4j2RZ3IShD_M746W1rxJ_ZDC1dgMTo600" \
--d "otp:978874" \
-http://127.0.0.1:8000/api/verify_otp/
-
-curl -X GET http://127.0.0.1:8000/api/redirect/
-
-
-
-
-"refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY5NTU2Mjg5NiwiaWF0IjoxNjkwMzc4ODk2LCJqdGkiOiI5YzZkNTNiM2Q1MjY0YWJkYWYxZjlkZDZiMTE2ZWVmNCIsInVzZXJfaWQiOjJ9.42eC9AXXlxnWMq8WiO1PegDR96AmQraVwE8ITHj-crQ",
-"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MDE4ODk2LCJpYXQiOjE2OTAzNzg4OTYsImp0aSI6ImNjZTdiYzJmNGJjOTRkYjM4MmNiNzRlZTk2MjNkZjFjIiwidXNlcl9pZCI6Mn0.B6wBGj5EABGgsMOWqBF7W8X9pGfd9VQxRPnsHkGFhgU"
+curl -X GET -H "Accept-Charset: utf-8" -H "Content-Type: application/x-www-form-urlencoded" http://127.0.0.1:8000/api/dashboard/

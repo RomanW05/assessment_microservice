@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from rest_framework_simplejwt.authentication import JWTStatelessUserAuthentication, JWTAuthentication
+from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication, JWTAuthentication
 from rest_framework_simplejwt.tokens import BlacklistMixin
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -43,12 +43,13 @@ class Login(generics.ListCreateAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = serializer.validate(attrs={
+        
+        data = serializer.return_tokens(attrs={
             'username': request.data['username'],
             'password': request.data['password']
             })
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
 
     def get(self, request):
         return Response(status=status.HTTP_200_OK)
@@ -57,8 +58,8 @@ class Login(generics.ListCreateAPIView):
 
 class Dashboard(generics.GenericAPIView):
     template_name = "delete.html"
-    authentication_classes = [JWTStatelessUserAuthentication]
-    permission_classes = [HasRestrictedScope]
+    authentication_classes = [JWTTokenUserAuthentication]
+    permission_classes = [HasFullScope]
     
     def get(self, request):
         JWT_authenticator = JWTAuthentication()
@@ -80,7 +81,7 @@ class Dashboard(generics.GenericAPIView):
 
 class Logout(generics.GenericAPIView):
     serializer_class = LogoutSerializer
-    authentication_classes = [JWTStatelessUserAuthentication]
+    authentication_classes = [JWTTokenUserAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -111,7 +112,7 @@ class Logout(generics.GenericAPIView):
 
 
 class redirect(APIView):
-    authentication_classes = [JWTStatelessUserAuthentication]
+    authentication_classes = [JWTTokenUserAuthentication]
     permission_classes = [IsAuthenticated]
     template_name = "dashboard3.html"
     
@@ -127,19 +128,31 @@ from rest_framework_simplejwt.tokens import AccessToken, Token
 
 class verifyOTPView(APIView):
     serializer_class = OTPSerializer
-    authentication_classes = [JWTStatelessUserAuthentication]
+    authentication_classes = [JWTTokenUserAuthentication]
     permission_classes = [IsAuthenticated, HasRestrictedScope]
 
-
     def post(self, request):
+        JWT_authenticator = JWTAuthentication()
+        print('inside post')
+        print('retrieving data')
         token = request.headers["Authorization"]
+        response = JWT_authenticator.authenticate(request)
+        if response is not None:
+            username, token = response
+            username = str(username)
+        else:
+            print('Token not valid')
+            raise BaseException
+
         otp = request.data["otp"]
-        serializer = self.serializer_class(data=request)
+
+        serializer = self.serializer_class(data={'otp':request.data["otp"], 'auth':request.headers['Authorization']})
+
+        # serializer = self.serializer_class(data={'otp':request.data["otp"],'token':str(token), 'username':username})
+
         serializer.is_valid(raise_exception=True)
-        data = serializer.validate(attrs={
-            'username': request.data['username'],
-            'password': request.data['password']
-            })
+
+        return Response(serializer.data['auth'], status=status.HTTP_200_OK)
         
 
 

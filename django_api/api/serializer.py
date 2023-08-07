@@ -119,6 +119,7 @@ class RestrictedAccessSerializer(TokenObtainPairSerializer):
             raise AuthenticationFailed('Invalid credentials, try again')
         if not user.is_active:
             raise AuthenticationFailed('Account disabled, contact admin')
+        print('username and pass correct')
         
         
         totp = pyotp.TOTP(SECRET_KEY_ENCODED, interval=6000)
@@ -127,27 +128,42 @@ class RestrictedAccessSerializer(TokenObtainPairSerializer):
         user.save()
         # send_otp(otp, user.email)
         print(user.get_username(), 'user\n')
-        tokens = self.get_tokens(user)
+        
+        print(user.otp)
+        print('done validating')
         return {
             'otp': user.otp,
             'email': user.email,
             'username': user.username,
-            'access': str(tokens['access']),
-            'refresh': str(tokens['refresh']),
+            # 'access': str(tokens['access']),
+            # 'refresh': str(tokens['refresh']),
         }
     
     @classmethod
     def get_tokens(cls, user):
+        print('classmethod')
         token = super().get_token(user)
         print(token.token_type, 'override get tokens restricted serializer\n')
 
         # Add custom claims
         token['scope'] = 'restricted'
-
+        print('done classmethod')
         return {
             "refresh":token,
             "access": token.access_token
         }
+    
+    @classmethod
+    def return_tokens(cls, attrs):
+        username = attrs.get('username','')
+        password = attrs.get('password','')
+        user = auth.authenticate(username=username,password=password)
+        tokens = cls.get_tokens(user)
+        return {
+            'access': str(tokens['access']),
+            'refresh': str(tokens['refresh']),
+        }
+
 
 
 
@@ -194,7 +210,7 @@ class FullAccessSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         # Add custom claims
-        token['scope'] = 'Full'
+        token['scope'] = 'full'
 
         return token
     
@@ -244,55 +260,53 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class OTPSerializer(serializers.Serializer):
     otp = serializers.CharField(label=("OTP"),max_length=6, min_length=6)
-    token = serializers.SerializerMethodField()
+    # username = serializers.CharField(label=("username"),max_length=6, min_length=1)
+    # token = serializers.CharField()
+    auth = serializers.CharField()
 
-    def validate(self, attrs):
-        token = attrs.headers["Authorization"]
-        otp = attrs.data["otp"]
-        # strip = settings.SIMPLE_JWT['AUTH_HEADER_TYPES']
-        token = token[7:]
+
+    # With the token and otp validate
+    def validate(self, data):
+        print(data, 'validating otp')
+        print(data['otp'], 'otp')
+        print(data['auth'], 'auth')
+        # print(data['token'], 'token')
+        otp = data['otp']
+        token = data['auth']
+        token = token.split(' ')[-1]
+        # token = data['token']
+
         access_token = AccessToken(token)
         payload_data = access_token.payload
-        print(payload_data, 'payload_data')
-        print(payload_data['user_id'], 'payload_data.user_id')
-        user = User.objects.get(pk=payload_data['user_id'])
-        username = User.objects.get(username=user)
-        validated_otp = User.objects.filter(username=username, otp=otp).select_related("user").first()
+        # print(payload_data, 'payload_data')
+        # print(payload_data['user_id'], 'payload_data.user_id')
+        # user = User.objects.get(pk=payload_data['user_id'] username=username)
+        user = User.objects.get(id=payload_data['user_id'])
+        # print(user.otp, 'user\n\n\n')
+
+        validated_otp = User.objects.filter(username=user.username, otp=otp)
+        print(validated_otp, 'validated_otp = User.objects.filter(username=username')
+        print('almost done validating otp')
         
         if not validated_otp:
+            print('wrong otp')
             msg = ('Unable to log in with provided credentials.')
             raise serializers.ValidationError(msg, code='authorization')
-        else:
-            msg = ('Must include "user_id" and "otp".')
-            raise serializers.ValidationError(msg, code='authorization')
+        
+        full_tokens = FullAccessSerializer()
+        tokens = full_tokens.get_token(user)
+        print(tokens)
 
-        attrs['user'] = validated_otp.user
-        return attrs
-    
+        
 
-        if str(user.otp)==otp:
-            user.verified = True
-            user.save()
-            return True
-        else:
-            return False
+        return {
+            # 'access': str(tokens.access_token),
+            # 'refresh': str(tokens),
+            'otp': '',
+            'auth': {
+                'access':str(tokens.access_token),
+                'refresh': str(tokens)}
+        }
+        # return tokens
 
 
-        # user_id = 
-        auth_ = attrs.get.headers['Authentication']
-        user_id = attrs.get('user_id')
-        otp = attrs.get('otp')
-
-        if user_id and otp:
-
-            validated_otp = Otp.objects.filter(user_id=user_id, otp=otp).select_related("user").first()
-
-            if not validated_otp:
-                msg = _('Unable to log in with provided credentials.')
-                raise serializers.ValidationError(msg, code='authorization')
-        else:
-            msg = _('Must include "user_id" and "otp".')
-            raise serializers.ValidationError(msg, code='authorization')
-
-        attrs['user'] = validated_otp.user
-        return attrs
