@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission
+from rest_framework_simplejwt.tokens import BlacklistMixin
 
 class HasRestrictedScope(BasePermission):
     def has_permission(self, request, view):
@@ -28,3 +29,26 @@ class HasFullScope(BasePermission):
 
         # If 'scope' claim is not present, deny access
         return False
+    
+
+class IsWhitelisted(BasePermission):
+    def has_permission(self, request, view):
+        # return True
+        try:
+            request.auth.payload
+        except:
+            return False
+        # Check if the 'scope' claim is present in the token payload
+        try:
+            print(request.auth)
+            BlacklistMixin.check_blacklist(request.auth)
+            return True
+        except:
+            return False
+        # if request.auth.payload
+        # if 'scope' in request.auth.payload:
+        #     # Check if the token's scope matches the required scope ('restricted')
+        #     return request.auth.payload['scope'] == 'full'
+
+        # # If 'scope' claim is not present, deny access
+        # return False

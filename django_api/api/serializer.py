@@ -147,23 +147,21 @@ class LogoutSerializer(serializers.Serializer):
 
     def validate(self, data):
         print('logoutserializer start')
-        # print(data['token'])
-        # token = data['token'].split(' ')[-1]
-        # access_token = AccessToken(token)
-        # print(access_token)
+        print(data, 'request data headers')
         JWT_authenticator = JWTAuthentication()
         try:
+            
             response = JWT_authenticator.authenticate(data['request'])
             if response is not None:
                 user, token = response
                 print('validation success')
-                return True
+                return
             else:
-                return False
+                raise TokenError
         except Exception as e:
 
             print(e, 'No user found')
-            return False
+            raise TokenError
 
     
     

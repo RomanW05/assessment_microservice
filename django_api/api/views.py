@@ -13,7 +13,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .authentication import HasRestrictedScope, HasFullScope
+from .authentication import HasRestrictedScope, HasFullScope, IsWhitelisted
 from .models import User
 from .serializer import RegisterSerializer, LogoutSerializer, RestrictedAccessSerializer, OTPSerializer
 
@@ -56,7 +56,7 @@ class Login(generics.ListCreateAPIView):
 class Dashboard(generics.GenericAPIView):
     template_name = "delete.html"
     authentication_classes = [JWTTokenUserAuthentication]
-    permission_classes = [HasFullScope]
+    permission_classes = [IsAuthenticated, HasFullScope, IsWhitelisted]
     
     def get(self, request):
         return render(request, self.template_name, None, status=status.HTTP_200_OK)
@@ -64,23 +64,26 @@ class Dashboard(generics.GenericAPIView):
 
 
 class Logout(generics.GenericAPIView):
-    serializer_class = LogoutSerializer
     authentication_classes = [JWTTokenUserAuthentication]
-    permission_classes = [HasFullScope]
+    permission_classes = [IsAuthenticated, HasFullScope]
 
     def post(self, request):
-        try:
-            print('serializer instantiation')
-            serializer = self.serializer_class(data={'request':request})
-            print('validating')
-            serializer.is_valid(raise_exception=True)
-            print('validation passed')
-            serializer.blacklist(request.headers['Authorization'])
+        JWT_authenticator = JWTAuthentication()
+        response = JWT_authenticator.authenticate(request)
+        if response is None:
+            raise BaseException
+        else:
+            user, token = response
+
+        response = BlacklistMixin.blacklist(token)
+        if response[1] == True:  # Token added to blacklist
+            print('token blacklisted')
             return HttpResponseRedirect('/api/login', status=status.HTTP_308_PERMANENT_REDIRECT)
-        except Exception as e:
-            print('error:,', e)
-            return Response({"error":str(e)}, status=status.HTTP_200_OK)
-            # raise PermissionError
+        else:
+            print('token not blacklisted')
+            return Response(status=status.HTTP_304_NOT_MODIFIED)
+
+
         
 
 
