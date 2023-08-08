@@ -3,26 +3,21 @@ from django.contrib import auth
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.tokens import AccessToken, BlacklistMixin, RefreshToken, TokenError
+from rest_framework_simplejwt.tokens import AccessToken
 
 import base64
-import json
 import pyotp
-import random
 
 from .config import otp_config
 from .models import User
 from .send_email import send_otp
 
-# print(SIMPLE_JWT)
+
 SECRET_DATA = otp_config()
 SECRET_KEY = SECRET_DATA['secret']
 SECRET_KEY_ENCODED = base64.b32encode(SECRET_KEY.encode()).decode()
 
-
-    
 
 class RestrictedAccessSerializer(TokenObtainPairSerializer):
     password = serializers.CharField(max_length=68, min_length=3,write_only=True)
@@ -42,14 +37,7 @@ class RestrictedAccessSerializer(TokenObtainPairSerializer):
             raise AuthenticationFailed('Account disabled, contact admin')
         
         return True
-        self.generate_otp(user)
-        # send_otp(otp, user.email)
 
-        return {
-            'otp': user.otp,
-            'email': user.email,
-            'username': user.username,
-        }
     
     def main(self, attrs):
         user = self.authenticate_user(attrs)
@@ -92,39 +80,6 @@ class RestrictedAccessSerializer(TokenObtainPairSerializer):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class FullAccessSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
@@ -140,44 +95,6 @@ class FullAccessSerializer(TokenObtainPairSerializer):
 
         return token
     
-
-
-class LogoutSerializer(serializers.Serializer):
-    # token = serializers.CharField()
-
-    def validate(self, data):
-        print('logoutserializer start')
-        print(data, 'request data headers')
-        JWT_authenticator = JWTAuthentication()
-        try:
-            
-            response = JWT_authenticator.authenticate(data['request'])
-            if response is not None:
-                user, token = response
-                print('validation success')
-                return
-            else:
-                raise TokenError
-        except Exception as e:
-
-            print(e, 'No user found')
-            raise TokenError
-
-    
-    
-    def blacklist(self, data):
-        JWT_authenticator = JWTAuthentication()
-        response = JWT_authenticator.authenticate(data)
-        _, token = response
-        try:
-            response = BlacklistMixin.blacklist(token)
-            print(response, 'token blacklisted')
-        except Exception as e:
-            print(e)
-            raise TokenError
-        return {}
-
-
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=3, write_only=True)

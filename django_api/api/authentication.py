@@ -33,22 +33,13 @@ class HasFullScope(BasePermission):
 
 class IsWhitelisted(BasePermission):
     def has_permission(self, request, view):
-        # return True
         try:
-            request.auth.payload
+            request.auth
         except:
             return False
-        # Check if the 'scope' claim is present in the token payload
+        # BlacklistMixin.check_blacklist raises error if token is blacklisted
         try:
-            print(request.auth)
             BlacklistMixin.check_blacklist(request.auth)
             return True
         except:
             return False
-        # if request.auth.payload
-        # if 'scope' in request.auth.payload:
-        #     # Check if the token's scope matches the required scope ('restricted')
-        #     return request.auth.payload['scope'] == 'full'
-
-        # # If 'scope' claim is not present, deny access
-        # return False

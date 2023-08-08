@@ -1,26 +1,20 @@
 from rest_framework import generics, status
 
-from rest_framework.permissions import IsAuthenticated, BasePermission
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication, JWTAuthentication
 from rest_framework_simplejwt.tokens import BlacklistMixin
-from rest_framework_simplejwt.views import TokenObtainPairView
 
-from django.contrib.auth import authenticate
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
 
 from .authentication import HasRestrictedScope, HasFullScope, IsWhitelisted
-from .models import User
-from .serializer import RegisterSerializer, LogoutSerializer, RestrictedAccessSerializer, OTPSerializer
-
-from django_api import settings
+from .serializer import RegisterSerializer, RestrictedAccessSerializer, OTPSerializer
 
 
-
+# Access views
 class Register(generics.ListCreateAPIView):
     serializer_class = RegisterSerializer
 
@@ -30,6 +24,9 @@ class Register(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(status=status.HTTP_201_CREATED)
+    
+    def get(self, request):
+        return Response(status=status.HTTP_200_OK)
 
 
 class Login(generics.ListCreateAPIView):
@@ -46,26 +43,32 @@ class Login(generics.ListCreateAPIView):
             'password': request.data['password']
             })
 
-        return Response(data, status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_202_ACCEPTED)
 
     def get(self, request):
         return Response(status=status.HTTP_200_OK)
-    
 
 
-class Dashboard(generics.GenericAPIView):
-    template_name = "delete.html"
+class verifyOTPView(APIView):
+    serializer_class = OTPSerializer
     authentication_classes = [JWTTokenUserAuthentication]
-    permission_classes = [IsAuthenticated, HasFullScope, IsWhitelisted]
-    
-    def get(self, request):
-        return render(request, self.template_name, None, status=status.HTTP_200_OK)
+    permission_classes = [IsAuthenticated, HasRestrictedScope, IsWhitelisted]
 
+    def post(self, request):
+        JWT_authenticator = JWTAuthentication()
+        response = JWT_authenticator.authenticate(request)
+        if response is None:
+            raise BaseException
+
+        serializer = self.serializer_class(data={'otp':request.data["otp"], 'auth':request.headers['Authorization']})
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data['auth'], status=status.HTTP_200_OK)
 
 
 class Logout(generics.GenericAPIView):
     authentication_classes = [JWTTokenUserAuthentication]
-    permission_classes = [IsAuthenticated, HasFullScope]
+    permission_classes = [IsAuthenticated, HasFullScope, IsWhitelisted]
 
     def post(self, request):
         JWT_authenticator = JWTAuthentication()
@@ -84,38 +87,12 @@ class Logout(generics.GenericAPIView):
             return Response(status=status.HTTP_304_NOT_MODIFIED)
 
 
-        
-
-
-
-
-
-    
-
-
-class verifyOTPView(APIView):
-    serializer_class = OTPSerializer
+# Data views
+class Dashboard(generics.GenericAPIView):
+    template_name = "delete.html"
     authentication_classes = [JWTTokenUserAuthentication]
-    permission_classes = [IsAuthenticated, HasRestrictedScope]
-
-    def post(self, request):
-        JWT_authenticator = JWTAuthentication()
-        response = JWT_authenticator.authenticate(request)
-        if response is None:
-            raise BaseException
-
-        serializer = self.serializer_class(data={'otp':request.data["otp"], 'auth':request.headers['Authorization']})
-        serializer.is_valid(raise_exception=True)
-
-        return Response(serializer.data['auth'], status=status.HTTP_200_OK)
-        
-
-
-
-
-
-
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = RestrictedAccessSerializer
+    permission_classes = [IsAuthenticated, HasFullScope, IsWhitelisted]
+    
+    def get(self, request):
+        return render(request, self.template_name, None, status=status.HTTP_200_OK)
 
