@@ -11,4 +11,6 @@ urlpatterns = [
     path('verify_otp/', views.verifyOTP.as_view(), name='verify otp'),
 
     path('dashboard/', views.Dashboard.as_view(), name="dashboard"),
+    path('delete/', views.DeleteAccount.as_view(), name="delete user"),
+    
 ]

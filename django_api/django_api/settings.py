@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     
     'api',
-    'authentication',
     'django_otp',
     'django_otp.plugins.otp_totp',
 ]
@@ -154,7 +153,6 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    # 'ACCESS_TOKEN_CLASS': ('api.custom_token.CustomTokenObtainPairSerializer',),
 }
 
 

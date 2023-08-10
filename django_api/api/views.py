@@ -15,6 +15,21 @@ from .serializer import RegisterSerializer, RestrictedAccessSerializer, OTPSeria
 
 
 # Access views
+class DeleteAccount(APIView):
+    serializer_class = RegisterSerializer
+    authentication_classes = [JWTTokenUserAuthentication]
+    permission_classes = [IsAuthenticated, HasFullScope, IsWhitelisted]
+
+    def post(self,request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.delete()
+
+        return Response(status=status.HTTP_205_RESET_CONTENT)
+    
+    def get(self, request):
+        return Response(status=status.HTTP_200_OK)
+
 class Register(generics.ListCreateAPIView):
     serializer_class = RegisterSerializer
 
@@ -83,7 +98,7 @@ class Logout(generics.GenericAPIView):
         response = BlacklistMixin.blacklist(token)
         if response[1] == True:  # Token added to blacklist
             print('token blacklisted')
-            return HttpResponseRedirect('/api/login', status=status.HTTP_308_PERMANENT_REDIRECT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             print('token not blacklisted')
             return Response(status=status.HTTP_304_NOT_MODIFIED)

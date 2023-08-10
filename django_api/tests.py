@@ -1,18 +1,30 @@
 """
 All endpoints and cases to cover:
-    1. Register new user
-    2. Login with credentials
-    3. Verify otp
-    4. Access dashboard with and without credentials
-    5. Logout
-    6. Access dashboard with outdated JWT
+    Endpoints:
+        1. Register new user
+        2. Login with credentials
+        3. Verify otp
+        4. Access dashboard with and without credentials
+        5. Logout
+        6. Access dashboard with outdated JWT
 
-Retrieving the right codes:
-    1. Register
-    2. Login
-    3. Verify otp
-    4. Dashboard
-    5. Logout
+    Cases:
+        . All right
+            - Register success
+            - Login success
+            - Verify OTP success
+        . Restricted access token tries access:
+            - Dashboard
+            - Logout
+        . Full access token tries access:
+            - Verify OTP
+            - Dashboard
+            - Logout
+        . Blacklisted token tries access
+            - Verify OTP
+            - Dashboard
+            - Logout
+
 """
 
 import json
@@ -25,10 +37,40 @@ import unittest
 
 main_url = 'http://127.0.0.1:8000'
 user_credentials = {'username': 'test', 'password': '123'}
+user_credentials = {"email": "testemail123@gmail.com", "password": "dhn4h.,23f", "username": "new_username_test"}
+
+def create_api_call(token, method, url):
+    headers = {
+            "Accept-Charset": "utf-8",
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}"
+        }
+    if method == 'post':
+        result = requests.post(f'{main_url}/{url}/', headers=headers)
+    elif method == 'get':
+        result = requests.get(f'{main_url}/{url}/', headers=headers)
+    elif method == 'delete':
+        result = requests.delete(f'{main_url}/{url}/', headers=headers)
+    elif method == 'update':
+        result = requests.update(f'{main_url}/{url}/', headers=headers)
+    else:
+        raise TypeError
+
+    return result
+
+
+
+def headers(token):
+    headers = {
+            "Accept-Charset": "utf-8",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": f"Bearer {token}"
+        }
+    return headers
 
 
 # Retrieving the right codes
-class TestGetEntryPoints(unittest.TestCase):
+class TestEntryPoints(unittest.TestCase):
     def test_register_get(self):
         result = requests.get(f'{main_url}/api/register/')
         assert result.status_code == 200
@@ -64,20 +106,41 @@ class TestGetEntryPoints(unittest.TestCase):
     def test_dashboard(self):
         result = requests.get(f'{main_url}/api/dashboard')
         assert result.status_code == 401
+    
+
+    def test_delete_get(self):
+        result = requests.get(f'{main_url}/api/delete')
+        assert result.status_code == 401
+    
+
+    def test_delete_post(self):
+        result = requests.get(f'{main_url}/api/delete')
+        assert result.status_code == 401
 
 
 
 
 
+class TestAllRight():
+    def test_delete_user(self):
+        self.get_restricted_access_token()
+        self.get_full_access_token()
+        old_user = json.dumps(user_credentials)
 
-class TestCredentials():
-    # def __init__(self) -> None:
-    #     self.get_restricted_access_token_login()
-    #     self.get_full_access_token_verify_otp()
-    #     self.test_dashboard_with_credentials()
+        result = requests.post(f'{main_url}/api/delete/', data=old_user)
+        assert result.status_code == 205
 
-    def get_restricted_access_token_login(self):
-        result = requests.post(f'{main_url}/api/login/', data=user_credentials)
+    def test_register_new_user(self):
+        new_user = json.dumps(user_credentials)
+        result = requests.post(f'{main_url}/api/register/', data=new_user)
+        if result.status_code == 415:
+            self.test_delete_user()
+            result = requests.post(f'{main_url}/api/register/', data=new_user)
+        assert result.status_code == 201
+
+
+    def get_restricted_access_token(self):
+        result = requests.post(f'{main_url}/api/login/', data={"username":user_credentials["username"], "password":user_credentials["password"]})
         assert result.status_code == 202
         result = result.json()
         self.restricted_access_token = result["access"]
@@ -85,20 +148,12 @@ class TestCredentials():
         decoded_token = jwt.decode(self.restricted_access_token, options={"verify_signature": False})
         assert decoded_token['scope'] == 'restricted'
         
-        # return restricted_access_token, otp
 
-
-    def get_full_access_token_verify_otp(self):
-        # restricted_access_token, otp = self.get_restricted_access_token_login()
+    def get_full_access_token(self):
+        self.get_restricted_access_token()
         data = {"otp": self.otp}
-
-        headers = {
-            "Accept-Charset": "utf-8",
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Authorization": f"Bearer {self.restricted_access_token}"
-        }
+        headers = self.headers_function(self.restricted_access_token)
         result = requests.post(f'{main_url}/api/verify_otp/', data=data, headers=headers)
-        # print(result.text)
         assert result.status_code == 202, result.status_code
         result = result.json()
         tokens = result["auth"]
@@ -107,23 +162,66 @@ class TestCredentials():
         decoded_token = jwt.decode(self.full_access_token, options={"verify_signature": False})
         assert decoded_token['scope'] == 'full'
 
-        
-        # return full_access_token
 
-
-    def test_dashboard_with_credentials(self):
-        self.get_restricted_access_token_login()
-        self.get_full_access_token_verify_otp()
-        # full_access_token = self.get_full_access_token_verify_otp()
-        headers = {
-            "Accept-Charset": "utf-8",
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Authorization": f"Bearer {self.full_access_token}"
-        }
+    def test_dashboard(self):
+        self.get_full_access_token()
+        headers = self.headers_function(self.full_access_token)
         result = requests.get(f'{main_url}/api/dashboard/', headers=headers)
         assert result.status_code == 200, result.status_code
+    
+
+    def test_logout(self):
+        self.test_dashboard()
+        headers = self.headers_function(self.full_access_token)
+        result = requests.post(f'{main_url}/api/logout/', headers=headers)
+        assert result.status_code == 204
+    
+
+    def get_all_tokens(self):
+        self.get_restricted_access_token()
+        self.get_full_access_token()
+
+    
+    @classmethod
+    def headers_function(cls, token):
+        headers = {
+                "Accept-Charset": "utf-8",
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Authorization": f"Bearer {token}"
+            }
+        return headers
+
+
+class TestRestrictedAccess(TestAllRight):
+    def test_dashboard(self):
+        self.get_restricted_access_token()
+        headers = self.headers_function(self.restricted_access_token)
+        result = requests.get(f'{main_url}/api/dashboard/', headers=headers)
+        assert result.status_code == 403, result.status_code
+
+
+class TestWrongCredentials(TestAllRight):
+    def test_dashboard_restricted_access(self):
+        self.get_full_access_token()
+        headers = self.headers_function(self.restricted_access_token)
+        result = requests.get(f'{main_url}/api/dashboard/', headers=headers)
+        assert result.status_code == 403, result.status_code
+
+        headers = self.headers_function(self.full_access_token)
+        result = requests.get(f'{main_url}/api/dashboard/', headers=headers)
+        assert result.status_code == 200, result.status_code
+    
+
+    def test_logout_blacklist_token(self):
+        self.get_full_access_token()
+        self.test_logout()
+
+        headers = self.headers_function(self.full_access_token)
+        result = requests.post(f'{main_url}/api/logout/', headers=headers)
+        assert result.status_code == 403
+
+        result = requests.get(f'{main_url}/api/dashboard/', headers=headers)
+        assert result.status_code == 403
 
 
 
-# credentials_testing = TestCredentials()
-# assert credentials_testing.full_access_token

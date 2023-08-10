@@ -102,23 +102,38 @@ class FullAccessSerializer(TokenObtainPairSerializer):
 
         return token
     
+from rest_framework.validators import UniqueValidator
+from django.contrib.auth.password_validation import validate_password
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=68, min_length=3, write_only=True)
+    # password = serializers.CharField(max_length=68, min_length=3, write_only=True)
+    # password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    # email = serializers.EmailField(
+    #         required=True,
+    #         validators=[UniqueValidator(queryset=User.objects.all())]
+    #         )
+    email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+    username = serializers.CharField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+    password = serializers.CharField(required=True, min_length=3, write_only=True)
 
     class Meta:
         model = User
         fields = ['email', 'username', 'password']
 
-    def validate(self, attrs):
-        email = attrs.get('email', '')
-        username = attrs.get('username', '')
-        if not username.isalnum():
-            raise serializers.ValidationError(self.default_error_messages)
-        return attrs
+    # def validate(self, data):
+    #     email = data.get('email')
+    #     username = data.get('username')
+    #     if not username.isalnum():
+    #         raise serializers.ValidationError(self.default_error_messages)
+    #     return data
     
+    # def create(self, validated_data):
+        # return User.objects.create_user(**validated_data)
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        user = User(email=validated_data['email'], username=validated_data['username'])
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
 
 class OTPSerializer(serializers.Serializer):
@@ -154,3 +169,23 @@ class OTPSerializer(serializers.Serializer):
             "otp": "",
             "auth": auth
         }
+
+
+
+class DeleteUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(max_length=68, min_length=3, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['email', 'username', 'password']
+
+    def validate(self, attrs):
+        email = attrs.get('email', '')
+        username = attrs.get('username', '')
+        if not username.isalnum():
+            raise serializers.ValidationError(self.default_error_messages)
+        return attrs
+    
+    def delete(self, validated_data):
+        return User.objects.delete(**validated_data)
+        return User.objects.create_user(**validated_data)
