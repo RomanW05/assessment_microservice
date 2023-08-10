@@ -1,4 +1,5 @@
 from django.contrib import auth
+from django.conf import settings
 
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
@@ -7,6 +8,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import AccessToken
 
 import base64
+import json
 import pyotp
 
 from .config import otp_config
@@ -44,11 +46,17 @@ class RestrictedAccessSerializer(TokenObtainPairSerializer):
         self.generate_otp(user)
         # send_otp(user)
         tokens = self.get_tokens(user)
-        print(tokens)
-        return {
+        if settings.DEBUG == True:
+            return {
             "refresh":str(tokens["refresh"]),
-            "access": str(tokens["access"])
+            "access": str(tokens["access"]),
+            "otp": user.otp
             }
+        else:
+            return {
+                "refresh":str(tokens["refresh"]),
+                "access": str(tokens["access"])
+                }
 
 
     def generate_otp(self, user):
@@ -56,9 +64,8 @@ class RestrictedAccessSerializer(TokenObtainPairSerializer):
         totp.now()
         user.otp = f'{totp.now()}'
         user.save()
-        print(user.otp, '\n')
 
-    
+
     @classmethod
     def get_tokens(cls, user):
         token = super().get_token(user)
@@ -117,6 +124,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 class OTPSerializer(serializers.Serializer):
     otp = serializers.CharField(label=("OTP"),max_length=6, min_length=6)
     auth = serializers.CharField()
+    # auth = serializers.DictField()
+
 
     # With the token and otp validate
     def validate(self, data):
@@ -135,10 +144,13 @@ class OTPSerializer(serializers.Serializer):
         
         full_tokens = FullAccessSerializer()
         tokens = full_tokens.get_token(user)
+        auth = json.dumps({
+                "access": str(tokens.access_token),
+                "refresh": str(tokens)
+        })
+        # auth = 1
        
         return {
-            'otp': '',
-            'auth': {
-                'access':str(tokens.access_token),
-                'refresh': str(tokens)}
+            "otp": "",
+            "auth": auth
         }

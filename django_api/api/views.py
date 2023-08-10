@@ -19,8 +19,7 @@ class Register(generics.ListCreateAPIView):
     serializer_class = RegisterSerializer
 
     def post(self,request):
-        user = request.data
-        serializer = self.serializer_class(data=user)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(status=status.HTTP_201_CREATED)
@@ -37,7 +36,7 @@ class Login(generics.ListCreateAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         data = serializer.main(attrs={
             'username': request.data['username'],
             'password': request.data['password']
@@ -49,7 +48,7 @@ class Login(generics.ListCreateAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class verifyOTPView(APIView):
+class verifyOTP(APIView):
     serializer_class = OTPSerializer
     authentication_classes = [JWTTokenUserAuthentication]
     permission_classes = [IsAuthenticated, HasRestrictedScope, IsWhitelisted]
@@ -63,7 +62,10 @@ class verifyOTPView(APIView):
         serializer = self.serializer_class(data={'otp':request.data["otp"], 'auth':request.headers['Authorization']})
         serializer.is_valid(raise_exception=True)
 
-        return Response(serializer.data['auth'], status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+    def get(self, request):
+        return Response(status=status.HTTP_200_OK)
 
 
 class Logout(generics.GenericAPIView):
@@ -92,7 +94,7 @@ class Dashboard(generics.GenericAPIView):
     template_name = "delete.html"
     authentication_classes = [JWTTokenUserAuthentication]
     permission_classes = [IsAuthenticated, HasFullScope, IsWhitelisted]
-    
+
     def get(self, request):
         return render(request, self.template_name, None, status=status.HTTP_200_OK)
 

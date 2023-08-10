@@ -10,7 +10,7 @@ from django.contrib import admin
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api/', include('api.urls'), name='auth')
+    path('api/', include('api.urls'), name='apis')
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
