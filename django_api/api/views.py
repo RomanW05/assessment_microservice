@@ -11,32 +11,38 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from .authentication import HasRestrictedScope, HasFullScope, IsWhitelisted
-from .serializer import RegisterSerializer, RestrictedAccessSerializer, OTPSerializer
+from .serializer import RegisterSerializer, RestrictedAccessSerializer, OTPSerializer, DeleteUserSerializer
 
 
 # Access views
-class DeleteAccount(APIView):
-    serializer_class = RegisterSerializer
+class DeleteAccount(generics.ListCreateAPIView):
+    serializer_class = DeleteUserSerializer
     authentication_classes = [JWTTokenUserAuthentication]
     permission_classes = [IsAuthenticated, HasFullScope, IsWhitelisted]
 
     def post(self,request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.delete()
-
+        # status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+        # status.HTTP_400_BAD_REQUEST
         return Response(status=status.HTTP_205_RESET_CONTENT)
     
     def get(self, request):
         return Response(status=status.HTTP_200_OK)
+
 
 class Register(generics.ListCreateAPIView):
     serializer_class = RegisterSerializer
 
     def post(self,request):
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            return Response(status=status.HTTP_409_CONFLICT)
+        # serializer.is_valid(raise_exception=True)
+
+        # serializer.save()
         return Response(status=status.HTTP_201_CREATED)
     
     def get(self, request):
@@ -72,8 +78,9 @@ class verifyOTP(APIView):
         JWT_authenticator = JWTAuthentication()
         response = JWT_authenticator.authenticate(request)
         if response is None:
-            raise BaseException
-
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        if not request.data["otp"]:
+            return Response({'Error':'OTP missing'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.serializer_class(data={'otp':request.data["otp"], 'auth':request.headers['Authorization']})
         serializer.is_valid(raise_exception=True)
 

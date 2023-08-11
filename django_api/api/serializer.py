@@ -139,8 +139,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 class OTPSerializer(serializers.Serializer):
     otp = serializers.CharField(label=("OTP"),max_length=6, min_length=6)
     auth = serializers.CharField()
-    # auth = serializers.DictField()
-
 
     # With the token and otp validate
     def validate(self, data):
@@ -163,7 +161,6 @@ class OTPSerializer(serializers.Serializer):
                 "access": str(tokens.access_token),
                 "refresh": str(tokens)
         })
-        # auth = 1
        
         return {
             "otp": "",
@@ -173,19 +170,29 @@ class OTPSerializer(serializers.Serializer):
 
 
 class DeleteUserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=255, min_length=3)
     password = serializers.CharField(max_length=68, min_length=3, write_only=True)
+    email = serializers.EmailField()
 
     class Meta:
         model = User
         fields = ['email', 'username', 'password']
 
-    def validate(self, attrs):
-        email = attrs.get('email', '')
-        username = attrs.get('username', '')
-        if not username.isalnum():
-            raise serializers.ValidationError(self.default_error_messages)
-        return attrs
-    
-    def delete(self, validated_data):
-        return User.objects.delete(**validated_data)
-        return User.objects.create_user(**validated_data)
+    def validate(self, data):
+        user = RestrictedAccessSerializer.authenticate_user(data)
+        if not user:
+            raise AuthenticationFailed('Invalid credentials, try again')
+        if not user.is_active:
+            raise AuthenticationFailed('Account disabled, contact admin')
+        
+        user.delete()
+        return True
+
+
+    # def delete_user(self, user):
+    #     user.delete()
+    #     print(type(validated_data), validated_data)
+    #     user = RestrictedAccessSerializer.authenticate_user({"username": validated_data["username"], "email": validated_data["email"]})
+    #     print(user)
+    #     user.delete()
+    #     return True
