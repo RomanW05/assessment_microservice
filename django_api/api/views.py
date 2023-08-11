@@ -23,8 +23,6 @@ class DeleteAccount(generics.ListCreateAPIView):
     def post(self,request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        # status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
-        # status.HTTP_400_BAD_REQUEST
         return Response(status=status.HTTP_205_RESET_CONTENT)
     
     def get(self, request):
@@ -40,9 +38,6 @@ class Register(generics.ListCreateAPIView):
             serializer.save()
         else:
             return Response(status=status.HTTP_409_CONFLICT)
-        # serializer.is_valid(raise_exception=True)
-
-        # serializer.save()
         return Response(status=status.HTTP_201_CREATED)
     
     def get(self, request):
@@ -113,7 +108,7 @@ class Logout(generics.GenericAPIView):
 
 # Data views
 class Dashboard(generics.GenericAPIView):
-    template_name = "delete.html"
+    template_name = "dashboard.html"
     authentication_classes = [JWTTokenUserAuthentication]
     permission_classes = [IsAuthenticated, HasFullScope, IsWhitelisted]
 

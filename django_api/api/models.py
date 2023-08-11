@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class User(AbstractUser):
-    verified = models.IntegerField(max_length=16, null=True)
+    verified = models.IntegerField(null=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     otp = models.IntegerField(null=True,blank=True)
 

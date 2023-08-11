@@ -1,13 +1,15 @@
 FROM python:3
 
-COPY /django_microservice/requirements.txt /api/requirements.txt
+COPY /django_api/requirements.txt /api/requirements.txt
 
 WORKDIR /api
 
 RUN pip3 install -r requirements.txt
 
-COPY /django_microservice /api
+COPY /django_api /api
 
-# ENTRYPOINT [ "python" ]
+RUN chmod +x entrypoint.sh
 
-# CMD [ "manage.py", "runserver" ]
+ENTRYPOINT [ "/api/entrypoint.sh" ]
+
+CMD ["python", "manage.py", "runserver" ]
